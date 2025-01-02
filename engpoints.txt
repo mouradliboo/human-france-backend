@@ -1,0 +1,7 @@
+/singup ==>
+/login==>login
+/agents/:id? status=pending 
+/agents?status=approved==>list des agents
+/agents?status=pending ==>liste des inscription
+post /agents/valide
+delete /agents/:id
