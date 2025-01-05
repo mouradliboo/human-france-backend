@@ -3,7 +3,9 @@ from rest_framework.response import Response
 from rest_framework import status as drf_status
 from .models import AgentProfile
 from .serializers import AgentListInscriptionSerializer,AgentDetailSerializer
-
+from .docstrings.list_agents_doc import agent_list_schema
+from .docstrings.agent_by_id_doc import agent_detail_schema,patch_agent_schema,delete_agent_schema
+@agent_list_schema()
 @api_view(['GET'])
 def list_agents(request):
     try:
@@ -22,6 +24,12 @@ def list_agents(request):
     except Exception as e:
         # Handle unexpected errors
         return Response({"error": str(e)}, status=drf_status.HTTP_400_BAD_REQUEST)
+    
+
+
+@delete_agent_schema()
+@patch_agent_schema()
+@agent_detail_schema()
 @api_view(['GET','PATCH','DELETE'])
 def agentDetail(request,pk):
  if request.method =='GET':
@@ -42,11 +50,11 @@ def agentDetail(request,pk):
             return Response(serializer.data)
         return Response(serializer.errors, status=drf_status.HTTP_400_BAD_REQUEST)
     except AgentProfile.DoesNotExist:
-        return Response({},status=drf_status.HTTP_404_NOT_FOUND)
+        return Response({"error":"agents does exist"},status=drf_status.HTTP_404_NOT_FOUND)
  if request.method =='DELETE':
         try:
             agent = AgentProfile.objects.get(id=pk)
             agent.delete()
             return Response({"message":"inscription deleted succussfully"},status=drf_status.HTTP_204_NO_CONTENT)
         except AgentProfile.DoesNotExist:
-            return Response({},status=drf_status.HTTP_404_NOT_FOUND)
+            return Response({"error":"agents does exist"},status=drf_status.HTTP_404_NOT_FOUND)

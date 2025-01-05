@@ -5,7 +5,7 @@ from drf_yasg import openapi
 from .serializers import CustomObtainTokenSerializer
 from rest_framework.decorators import permission_classes
 from django.http import JsonResponse
-from .docstring import login_schema
+from .docstring import login_schema,signup_schema
 import cloudinary.uploader
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
@@ -21,7 +21,7 @@ class CustomTokenObtain(TokenObtainPairView):
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
 
-
+@signup_schema()
 @permission_classes([AllowAny])
 @api_view(['POST'])
 def signup(request):
