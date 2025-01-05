@@ -12,7 +12,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
-
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -93,10 +95,15 @@ DATABASES = {
 
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'your_cloud_name',
-    'API_KEY': '673151423632799',
-    'API_SECRET': 'C4P2uhSrZB8SsQac3BAXdnY3S74',
+    'cloud_name': 'dac02kjvd',
+    'api_key': '673151423632799',
+    'api_secret': 'C4P2uhSrZB8SsQac3BAXdnY3S74',
 }
+cloudinary.config(
+    cloud_name=CLOUDINARY_STORAGE['cloud_name'],
+    api_key=CLOUDINARY_STORAGE['api_key'],
+    api_secret=CLOUDINARY_STORAGE['api_secret']
+)
 
 # Set Cloudinary as the default storage for media files
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
@@ -113,12 +120,14 @@ AUTH_USER_MODEL = 'authentication.CustomUser'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.AllowAny',  # Allow any user to access views
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # Optional: You can remove or comment this out if authentication is not required globally
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication', 
     ),
 }
+
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
