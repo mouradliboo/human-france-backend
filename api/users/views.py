@@ -47,6 +47,6 @@ def agentDetail(request,pk):
         try:
             agent = AgentProfile.objects.get(id=pk)
             agent.delete()
-            return Response({},status=drf_status.HTTP_204_NO_CONTENT)
+            return Response({"message":"inscription deleted succussfully"},status=drf_status.HTTP_204_NO_CONTENT)
         except AgentProfile.DoesNotExist:
             return Response({},status=drf_status.HTTP_404_NOT_FOUND)
