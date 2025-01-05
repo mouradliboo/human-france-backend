@@ -104,3 +104,58 @@
     ]
 }
 ################################################################
+{
+    "first_name": "Alice",
+    "last_name": "Smith",
+    "username": "alicesmith2025",
+    "email": "alice.smith@example.com",
+    "password": "StrongPassword456!",
+    "phone": "+987654321",
+    "address": "456 Elm Street, Metropolis",
+    "role": "agent",
+    "photo_identity": "path/to/alice_photo_identity.jpg",
+    "nss": "98765432109876",
+    "card_number_pro": "PRO-567890",
+    "security_card_photo": "path/to/security_card_photo_alice.jpg",
+    "nub": "67890",
+    "agent_fonction": "securite",
+    "driver_licence_type": "A",
+    "emergency_contact_name": "Bob Smith",
+    "emergency_contact_phone": "+123456789",
+    "diplomes": [
+        {
+            "title": "Master's Degree in Criminology",
+            "institution": "Metropolis University",
+            "year": 2018
+        },
+        {
+            "title": "Advanced Security Certification",
+            "institution": "Security Academy",
+            "year": 2020
+        }
+    ],
+    "experience": [
+        {
+            "job_title": "Security Specialist",
+            "company": "SecureCorp Ltd.",
+            "duration": "3 years"
+        },
+        {
+            "job_title": "Risk Analyst",
+            "company": "Global Risk Solutions",
+            "duration": "2 years"
+        }
+    ],
+    "tenues": [
+        {
+            "type": "Tactical Vest",
+            "size": "L",
+            "quantity": 1
+        },
+        {
+            "type": "Helmet",
+            "size": "Standard",
+            "quantity": 1
+        }
+    ]
+}

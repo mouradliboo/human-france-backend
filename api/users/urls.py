@@ -1,7 +1,7 @@
 from django.urls import path,include
-from .views import listInscription,listDesAgents
+from .views import list_agents,agentDetail
 urlpatterns = [
-    path('agents_inscription_list/', listInscription),
-    path('agents_list/', listDesAgents),
-]
+    path('agents/', list_agents),
+   path('agents/<int:pk>/', agentDetail),   
+   ]
 # Create

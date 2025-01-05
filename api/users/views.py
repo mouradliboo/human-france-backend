@@ -1,21 +1,52 @@
-from .models import AgentProfile
-from rest_framework.response import Response
-from .serializers import AgentListInscriptionSerializer
 from rest_framework.decorators import api_view
-@api_view(['GET'])
+from rest_framework.response import Response
+from rest_framework import status as drf_status
+from .models import AgentProfile
+from .serializers import AgentListInscriptionSerializer,AgentDetailSerializer
 
-def listInscription(request):
-    agents_panding = AgentProfile.objects.filter(status="pending")
-    serializer = AgentListInscriptionSerializer(agents_panding, many=True)
-    return Response(serializer.data, status=200)
 @api_view(['GET'])
-def listDesAgents(request):
-    agents_panding = AgentProfile.objects.filter(status="approved")
-    serializer = AgentListInscriptionSerializer(agents_panding, many=True)
-    return Response(serializer.data, status=200)
-    # if request.method == 'GET':
-    #     agents = Agent.objects.all()
-    #     serializer = AgentSerializer(agents, many=True)
-    #     return JsonResponse(serializer.data, safe=False)
-    # return JsonResponse(serializer.errors, status=400)
-    return Response({"message":"Hello world"}, status=200)
+def list_agents(request):
+    try:
+        # Get the `status` query parameter
+        status_param = request.query_params.get('status', 'approved')
+
+ 
+            # Filter users based on the provided status
+        agents = AgentProfile.objects.filter(status=status_param)
+        serializer=AgentListInscriptionSerializer(agents,many=True)
+   
+
+        # Serialize the filtered users
+        return Response(serializer.data, status=drf_status.HTTP_200_OK)
+
+    except Exception as e:
+        # Handle unexpected errors
+        return Response({"error": str(e)}, status=drf_status.HTTP_400_BAD_REQUEST)
+@api_view(['GET','PATCH','DELETE'])
+def agentDetail(request,pk):
+ if request.method =='GET':
+    try:
+        agent = AgentProfile.objects.get(id=pk)
+        print(agent)
+        serializer = AgentDetailSerializer(agent)
+        return Response(serializer.data)
+    except AgentProfile.DoesNotExist:
+        return Response({},status=drf_status.HTTP_404_NOT_FOUND)
+ if request.method =='PATCH':
+
+    try:
+        agent = AgentProfile.objects.get(id=pk)
+        serializer = AgentDetailSerializer(agent, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=drf_status.HTTP_400_BAD_REQUEST)
+    except AgentProfile.DoesNotExist:
+        return Response({},status=drf_status.HTTP_404_NOT_FOUND)
+ if request.method =='DELETE':
+        try:
+            agent = AgentProfile.objects.get(id=pk)
+            agent.delete()
+            return Response({},status=drf_status.HTTP_204_NO_CONTENT)
+        except AgentProfile.DoesNotExist:
+            return Response({},status=drf_status.HTTP_404_NOT_FOUND)
