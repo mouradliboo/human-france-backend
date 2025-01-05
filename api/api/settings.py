@@ -35,6 +35,8 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+      'cloudinary',
+    'cloudinary_storage',
      'rest_framework',
     'rest_framework_simplejwt',
     'django.contrib.sessions',
@@ -85,6 +87,19 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+#cloud config
+# settings.py
+
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'your_cloud_name',
+    'API_KEY': '673151423632799',
+    'API_SECRET': 'C4P2uhSrZB8SsQac3BAXdnY3S74',
+}
+
+# Set Cloudinary as the default storage for media files
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
 

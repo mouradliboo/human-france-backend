@@ -28,7 +28,7 @@ class CustomUser(AbstractUser):
     role = models.CharField(max_length=15, choices=ROLE_CHOICES, default='agent')
     created_at = models.DateTimeField(default=now, editable=False)
     updated_at = models.DateTimeField(auto_now=True)
-    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='agent')
+    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='pending') 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
