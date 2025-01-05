@@ -14,6 +14,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.parsers import MultiPartParser, FormParser
 from .serializers import UserSerializer
 from users.serializers import AgentSerializerCreate
+from .signals import sendMail
 class CustomTokenObtain(TokenObtainPairView):
     serializer_class = CustomObtainTokenSerializer
     
@@ -40,6 +41,7 @@ def signup(request):
             agent_serializer = AgentSerializerCreate(data=agent_data)
             if agent_serializer.is_valid():
                 agent_serializer.save()
+                sendMail(username=user.username,email=user.email)
                 return JsonResponse({"agent":agent_serializer.data,
                                      "user":user_serializer.data}, status=201)
             else:
