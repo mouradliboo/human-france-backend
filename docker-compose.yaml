@@ -4,7 +4,7 @@ services:
     build: .
     command: python3 api/manage.py runserver 0.0.0.0:8000  # Correct path to manage.py
     volumes:
-      - .:/app  # Mount the current directory to /app in the container
+        - /app  # Mount the current directory to /app in the container
     ports:
       - "8000:8000"
     depends_on:
