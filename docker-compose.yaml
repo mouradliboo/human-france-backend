@@ -3,11 +3,11 @@
 services:
   web:
     build:
-      context: .
+      context: .  # Build from the current directory
     container_name: drf_app
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python /human-france-backend-/api/manage.py runserver 0.0.0.0:8000  # Specify the correct path to manage.py
     volumes:
-      - .:/app  # Mount the current directory to the container's /app directory
+      - .:/human-france-backend-/api  # Mount the current directory to /human-france-backend-/api
     ports:
       - "8000:8000"  # Map port 8000 on the host to port 8000 in the container
     environment:
