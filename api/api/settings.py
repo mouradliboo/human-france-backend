@@ -115,6 +115,7 @@ cloudinary.config(
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
+ALLOWED_HOSTS = ["192.168.43.1"]
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
