@@ -1,28 +1,13 @@
-# Use the official Python image as a base
-FROM python:3.10-slim
+FROM python:3
+ENV PYTHONUNBUFFERED 1
+WORKDIR /app              
+# creates the directory, don't need to RUN mkdir
+COPY requirements.txt ./ 
+ # shorter and safer to COPY into current directory
+RUN pip install -r requirements.txt
+COPY ./ ./
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE=1 
-ENV PYTHONUNBUFFERED=1         
-
-# Set the working directory inside the container
-WORKDIR /human-france-backend-/api
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    libpq-dev \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Install Python dependencies
-COPY requirements.txt /human-france-backend-/
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy the entire project into the container
-COPY . /human-france-backend-/api
-
-# Expose the port Django will run on
-EXPOSE 8000
-
-# Run Django's development server
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# add the following
+WORKDIR /app/api      
+EXPOSE 8000              
+CMD python3 ./manage.py runserver 0.0.0.0:8000  

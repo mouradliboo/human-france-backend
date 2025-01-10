@@ -1,13 +1,8 @@
+version: '3.8'  # "3" means "3.0"
 services:
   web:
-    build:
-      context: .  # Build from the current directory
-    container_name: drf_app
-    command: python /human-france-backend-/api/manage.py runserver 0.0.0.0:8000  # Full path to manage.py
-    volumes:
-      - .:/human-france-backend-/  # Mount the entire project to /human-france-backend-/ in the container
+    build: .
     ports:
-      - "8000:8000"  # Map port 8000 on the host to port 8000 in the container
-    environment:
-      - PYTHONDONTWRITEBYTECODE=1  # Prevent .pyc files
-      - PYTHONUNBUFFERED=1         # Send logs directly to console
+      - "8000:8000"
+    depends_on:
+      - db
