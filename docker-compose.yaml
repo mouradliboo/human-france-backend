@@ -1,0 +1,15 @@
+
+
+services:
+  web:
+    build:
+      context: .
+    container_name: drf_app
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app  # Mount the current directory to the container's /app directory
+    ports:
+      - "8000:8000"  # Map port 8000 on the host to port 8000 in the container
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1  # Prevent .pyc files
+      - PYTHONUNBUFFERED=1         # Send logs directly to console
