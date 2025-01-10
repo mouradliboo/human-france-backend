@@ -114,7 +114,7 @@ cloudinary.config(
 # Set Cloudinary as the default storage for media files
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
-ALLOWED_HOSTS = ['giving-flow-production.up.railway.app', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['human-france-api.up.railway.app', 'localhost', '127.0.0.1']
 
 
 
