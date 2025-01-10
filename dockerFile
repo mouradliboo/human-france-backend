@@ -6,7 +6,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1         
 
 # Set the working directory inside the container
-WORKDIR /api
+WORKDIR /human-france-backend-/api
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -15,11 +15,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
-COPY requirements.txt /api/
+COPY requirements.txt /human-france-backend-/
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the entire project into the container
-COPY . /api/
+COPY . /human-france-backend-/api
 
 # Expose the port Django will run on
 EXPOSE 8000
