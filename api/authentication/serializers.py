@@ -31,7 +31,7 @@ class UserSerializer(serializers.ModelSerializer):
        
 
     def create(self, validated_data):
-        username = f"{validated_data.get('nss')}{validated_data.get('first_name')}"
+        username = f"{validated_data.get('email')}{validated_data.get('first_name')}"
         user = CustomUser.objects.create_user(username=username,
                                              
                                               **validated_data)
