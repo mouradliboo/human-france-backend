@@ -73,57 +73,32 @@ def signup_schema():
     # Request body schema
     request_body = openapi.Schema(
         type=openapi.TYPE_OBJECT,
-        required=['first_name', 'last_name', 'username', 'email', 'password', 'phone', 'address', 'role'],
+        required=['first_name', 'last_name', 'email', 'phone', 'address', 'agent_fonction'],
         properties={
             'first_name': openapi.Schema(type=openapi.TYPE_STRING, example='Alex'),
             'last_name': openapi.Schema(type=openapi.TYPE_STRING, example='Johnson'),
-            'username': openapi.Schema(type=openapi.TYPE_STRING, example='alexjohnson'),
-            'email': openapi.Schema(type=openapi.TYPE_STRING, example='alexjohnson@example.com'),
-            'password': openapi.Schema(type=openapi.TYPE_STRING, example='securepassword123'),
+            'email': openapi.Schema(type=openapi.TYPE_STRING, example='ma_misskkzdzm@esi.dz'),
             'phone': openapi.Schema(type=openapi.TYPE_STRING, example='+1234567890'),
             'address': openapi.Schema(type=openapi.TYPE_STRING, example='789 Elm St, Springfield'),
-            'role': openapi.Schema(type=openapi.TYPE_STRING, example='agent'),
             'photo_identity': openapi.Schema(type=openapi.TYPE_STRING, example='https://example.com/photo_identity.jpg'),
             'nss': openapi.Schema(type=openapi.TYPE_STRING, example='9876f5432109876'),
             'card_number_pro': openapi.Schema(type=openapi.TYPE_STRING, example='PRO987654'),
             'security_card_photo': openapi.Schema(type=openapi.TYPE_STRING, example='https://example.com/security_card_photo.jpg'),
             'nub': openapi.Schema(type=openapi.TYPE_STRING, example='NUB456'),
-            'agent_fonction': openapi.Schema(type=openapi.TYPE_STRING, example='securite'),
+            'agent_fonction': openapi.Schema(type=openapi.TYPE_ARRAY, items=openapi.Schema(type=openapi.TYPE_STRING), example=["securite", "tricking"]),
             'driver_licence_type': openapi.Schema(type=openapi.TYPE_STRING, example='B'),
             'emergency_contact_name': openapi.Schema(type=openapi.TYPE_STRING, example='Sarah Johnson'),
             'emergency_contact_phone': openapi.Schema(type=openapi.TYPE_STRING, example='+0987654321'),
-            'diplomes': openapi.Schema(type=openapi.TYPE_OBJECT, example={
-                "diploma_1": {
-                    "title": "BSc in Security Management",
-                    "year": 2015
-                },
-                "diploma_2": {
-                    "title": "Certified Fire Safety Specialist",
-                    "year": 2018
-                }
-            }),
-            'experience': openapi.Schema(type=openapi.TYPE_OBJECT, example={
-                "experience_1": {
-                    "company": "Fire Safety Inc.",
-                    "position": "Senior Agent",
-                    "years": 3
-                },
-                "experience_2": {
-                    "company": "Secure Solutions",
-                    "position": "Team Lead",
-                    "years": 2
-                }
-            }),
-            'tenues': openapi.Schema(type=openapi.TYPE_OBJECT, example={
-                "tenue_1": {
-                    "type": "Uniform",
-                    "quantity": 2
-                },
-                "tenue_2": {
-                    "type": "Helmet",
-                    "quantity": 1
-                }
-            })
+            'diplomes': openapi.Schema(type=openapi.TYPE_ARRAY, items=openapi.Schema(type=openapi.TYPE_OBJECT), example=[
+                {"title": "BSc in Security Management", "year": 2015},
+                {"title": "Certified Fire Safety Specialist", "year": 2018}
+            ]),
+            'experience': openapi.Schema(type=openapi.TYPE_ARRAY, items=openapi.Schema(type=openapi.TYPE_OBJECT), example=[
+                {"company": "Fire Safety Inc.", "position": "Senior Agent", "years": 3},
+                {"company": "Secure Solutions", "position": "Team Lead", "years": 2}
+            ]),
+            'tenues': openapi.Schema(type=openapi.TYPE_ARRAY, items=openapi.Schema(type=openapi.TYPE_STRING), example=["lux", "lanc"]),
+            'languages': openapi.Schema(type=openapi.TYPE_ARRAY, items=openapi.Schema(type=openapi.TYPE_STRING), example=["arabic", "french"])
         }
     )
 
@@ -132,39 +107,36 @@ def signup_schema():
         type=openapi.TYPE_OBJECT,
         properties={
             'agent': openapi.Schema(type=openapi.TYPE_OBJECT, properties={
-                'id': openapi.Schema(type=openapi.TYPE_INTEGER, example=7),
+                'id': openapi.Schema(type=openapi.TYPE_INTEGER, example=1),
                 'photo_identity': openapi.Schema(type=openapi.TYPE_STRING, example='https://example.com/photo_identity.jpg'),
                 'nss': openapi.Schema(type=openapi.TYPE_STRING, example='9876f5432109876'),
                 'card_number_pro': openapi.Schema(type=openapi.TYPE_STRING, example='PRO987654'),
                 'security_card_photo': openapi.Schema(type=openapi.TYPE_STRING, example='https://example.com/security_card_photo.jpg'),
                 'nub': openapi.Schema(type=openapi.TYPE_STRING, example='NUB456'),
-                'agent_fonction': openapi.Schema(type=openapi.TYPE_STRING, example='securite'),
+                'agent_fonction': openapi.Schema(type=openapi.TYPE_ARRAY, items=openapi.Schema(type=openapi.TYPE_STRING), example=["securite", "tricking"]),
                 'driver_licence_type': openapi.Schema(type=openapi.TYPE_STRING, example='B'),
                 'emergency_contact_name': openapi.Schema(type=openapi.TYPE_STRING, example='Sarah Johnson'),
                 'emergency_contact_phone': openapi.Schema(type=openapi.TYPE_STRING, example='+0987654321'),
-                'diplomes': openapi.Schema(type=openapi.TYPE_OBJECT, example={
-                    "diploma_1": {"title": "BSc in Security Management", "year": 2015},
-                    "diploma_2": {"title": "Certified Fire Safety Specialist", "year": 2018}
-                }),
-                'experience': openapi.Schema(type=openapi.TYPE_OBJECT, example={
-                    "experience_1": {"company": "Fire Safety Inc.", "position": "Senior Agent", "years": 3},
-                    "experience_2": {"company": "Secure Solutions", "position": "Team Lead", "years": 2}
-                }),
-                'tenues': openapi.Schema(type=openapi.TYPE_OBJECT, example={
-                    "tenue_1": {"type": "Uniform", "quantity": 2},
-                    "tenue_2": {"type": "Helmet", "quantity": 1}
-                }),
+                'diplomes': openapi.Schema(type=openapi.TYPE_ARRAY, items=openapi.Schema(type=openapi.TYPE_OBJECT), example=[
+                    {"title": "BSc in Security Management", "year": 2015},
+                    {"title": "Certified Fire Safety Specialist", "year": 2018}
+                ]),
+                'experience': openapi.Schema(type=openapi.TYPE_ARRAY, items=openapi.Schema(type=openapi.TYPE_OBJECT), example=[
+                    {"company": "Fire Safety Inc.", "position": "Senior Agent", "years": 3},
+                    {"company": "Secure Solutions", "position": "Team Lead", "years": 2}
+                ]),
+                'tenues': openapi.Schema(type=openapi.TYPE_ARRAY, items=openapi.Schema(type=openapi.TYPE_STRING), example=["lux", "lanc"]),
+                'languages': openapi.Schema(type=openapi.TYPE_ARRAY, items=openapi.Schema(type=openapi.TYPE_STRING), example=["arabic", "french"]),
                 'status': openapi.Schema(type=openapi.TYPE_STRING, example='pending'),
-                'created_at': openapi.Schema(type=openapi.TYPE_STRING, example='2025-01-05T21:12:17.417364Z'),
-                'updated_at': openapi.Schema(type=openapi.TYPE_STRING, example='2025-01-05T21:12:17.418024Z'),
-                'user': openapi.Schema(type=openapi.TYPE_INTEGER, example=12),
+                'created_at': openapi.Schema(type=openapi.TYPE_STRING, example='2025-01-11T14:55:09.640542Z'),
+                'updated_at': openapi.Schema(type=openapi.TYPE_STRING, example='2025-01-11T14:55:09.641030Z'),
+                'user': openapi.Schema(type=openapi.TYPE_INTEGER, example=1),
             }),
             'user': openapi.Schema(type=openapi.TYPE_OBJECT, properties={
-                'id': openapi.Schema(type=openapi.TYPE_INTEGER, example=12),
-                'username': openapi.Schema(type=openapi.TYPE_STRING, example='alexjohnson'),
+                'id': openapi.Schema(type=openapi.TYPE_INTEGER, example=1),
                 'first_name': openapi.Schema(type=openapi.TYPE_STRING, example='Alex'),
                 'last_name': openapi.Schema(type=openapi.TYPE_STRING, example='Johnson'),
-                'email': openapi.Schema(type=openapi.TYPE_STRING, example='alexjohnson@example.com'),
+                'email': openapi.Schema(type=openapi.TYPE_STRING, example='ma_misskkzdzm@esi.dz'),
                 'phone': openapi.Schema(type=openapi.TYPE_STRING, example='+1234567890'),
                 'address': openapi.Schema(type=openapi.TYPE_STRING, example='789 Elm St, Springfield')
             })
