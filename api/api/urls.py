@@ -32,7 +32,7 @@ schema_view = get_schema_view(
     public=True,
     permission_classes=[AllowAny],
 )
-print("hhhhhhhhhhhh")
+
 urlpatterns = [
     path('admin/', admin.site.urls),
    re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),

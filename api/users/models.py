@@ -3,12 +3,7 @@ from authentication.models import CustomUser
 from django.utils.timezone import now
 # Create your models here.
 class AgentProfile(models.Model):
-    AGENT_TYPE_CHOICES = [
-        ('incendie', 'Incendie'),
-        ('securite', 'Sécurité'),
-        ('other', 'Other'),
-    ]
-
+   
     DRIVER_LICENCE_CHOICES = [
         ('A', 'A'),
         ('B', 'B'),
@@ -26,14 +21,14 @@ class AgentProfile(models.Model):
     card_number_pro = models.CharField(max_length=50, unique=True)
     security_card_photo = models.CharField(max_length=255, null=True, blank=True)
     nub = models.CharField(max_length=10, null=True, blank=True)
-    agent_fonction = models.CharField(max_length=15, choices=AGENT_TYPE_CHOICES)
+    agent_fonction = models.TextField(null=True, blank=True)
     driver_licence_type = models.CharField(max_length=2, choices=DRIVER_LICENCE_CHOICES, default='N')
     emergency_contact_name = models.CharField(max_length=100)
     emergency_contact_phone = models.CharField(max_length=20)
     diplomes = models.JSONField(null=True, blank=True)
     experience = models.JSONField(null=True, blank=True)
-    tenues = models.JSONField(null=True, blank=True)
-    
+    tenues = models.CharField(max_length=255, null=True, blank=True)
+    languages = models.CharField(max_length=255, null=True, blank=True)
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='pending') 
 
     created_at = models.DateTimeField(default=now, editable=False)
