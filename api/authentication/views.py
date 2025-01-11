@@ -31,8 +31,10 @@ def signup(request):
     try:
         # Validate user data
         password = generate_random_string(12)
+        print(password)
         user_data = request.data.copy()
         user_data['password'] = password
+        print(user_data)
 
         user_serializer = UserSerializer(data=user_data)
         if user_serializer.is_valid():
