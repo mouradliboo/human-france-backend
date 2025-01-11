@@ -8,9 +8,9 @@ def login_schema():
     # Request body schema
     request_body = openapi.Schema(
         type=openapi.TYPE_OBJECT,
-        required=['username', 'password'],
+        required=['email', 'password'],
         properties={
-            'username': openapi.Schema(type=openapi.TYPE_STRING, example='username'),
+            'email': openapi.Schema(type=openapi.TYPE_STRING, example='email@gmail.com'),
             'password': openapi.Schema(type=openapi.TYPE_STRING, example='password'),
         }
     )

@@ -200,6 +200,12 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #swagger 
-SWAGGER_SETTINGS = {
-   'DEFAULT_INFO': 'import.path.to.urls.api_info',
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'My API',
+    'DESCRIPTION': 'API documentation',
+    'VERSION': '1.0.0',
+    'SERVERS': [
+        {'url': '/api/v1', 'description': 'Base URL for API v1'},
+    ],
 }
+
