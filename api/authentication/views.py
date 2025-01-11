@@ -31,6 +31,7 @@ def signup(request):
         # Validate user data
         password = generate_random_string(12)
         user_data =request.data.copy()
+    
         user_data['password']=password
 
         user_serializer = UserSerializer(data=user_data)
@@ -39,7 +40,9 @@ def signup(request):
             user = user_serializer.save()
 
             # Add user_id to the request data for Agent creation
-           
+            user_data["languages"]=','.join(user_data["languages"])
+            user_data["tenues"]=','.join(user_data["tenues"])
+            user_data["agent_fonction"]=','.join(user_data["agent_fonction"])
             user_data['user'] = user.id
 
             # Validate and save agent data
@@ -57,4 +60,6 @@ def signup(request):
         else:
             return JsonResponse(user_serializer.errors, status=400)
     except Exception as e:
+        if user :   
+            user.delete()
         return JsonResponse({"error": str(e)}, status=400)
