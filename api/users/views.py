@@ -1,10 +1,15 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status as drf_status
+from rest_framework.pagination import LimitOffsetPagination
 from .models import AgentProfile
 from .serializers import AgentListInscriptionSerializer,AgentDetailSerializer
 from .docstrings.list_agents_doc import agent_list_schema
 from .docstrings.agent_by_id_doc import agent_detail_schema,patch_agent_schema,delete_agent_schema
+
+class MyLimitOffsetPagination(LimitOffsetPagination):
+    
+  default_limit=9
 @agent_list_schema()
 @api_view(['GET'])
 def list_agents(request):
@@ -15,10 +20,25 @@ def list_agents(request):
  
             # Filter users based on the provided status
         agents = AgentProfile.objects.filter(status=status_param)
-        serializer=AgentListInscriptionSerializer(agents,many=True)
+        
+        print(len(agents))
+        
+        
+        
+        paginator = MyLimitOffsetPagination()
+    
+    # Paginate the queryset
+        paginated_queryset = paginator.paginate_queryset(agents, request)
+        print(paginated_queryset)
+    
+    # Serialize the paginated data
+
+    
+        serializer=AgentListInscriptionSerializer(paginated_queryset,many=True)
    
 
         # Serialize the filtered users
+       
         return Response(serializer.data, status=drf_status.HTTP_200_OK)
 
     except Exception as e:

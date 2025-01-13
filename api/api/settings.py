@@ -138,6 +138,7 @@ DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 AUTH_USER_MODEL = 'authentication.CustomUser'
 
 REST_FRAMEWORK = {
+   
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',  # Allow any user to access views
     ),

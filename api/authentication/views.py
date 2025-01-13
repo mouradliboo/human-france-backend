@@ -16,6 +16,8 @@ from .serializers import UserSerializer
 from users.serializers import AgentSerializerCreate
 from .signals import sendMail
 from .utils.createAgent import generate_random_string
+
+
 class CustomTokenObtain(TokenObtainPairView):
     serializer_class = CustomObtainTokenSerializer
     
