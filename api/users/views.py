@@ -34,7 +34,7 @@ def list_agents(request):
     # Serialize the paginated data
 
     
-        serializer=AgentListInscriptionSerializer(paginated_queryset,many=True)
+        serializer=AgentDetailSerializer(paginated_queryset,many=True)
    
 
         # Serialize the filtered users
