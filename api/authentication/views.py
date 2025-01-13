@@ -47,7 +47,7 @@ def signup(request):
                 # Add user_id to the request data for Agent creation
                 user_data["languages"] = ','.join(user_data.get("languages", []))
                 user_data["tenues"] = ','.join(user_data.get("tenues", []))
-                user_data["agent_fonction"] = ','.join(user_data.get("agent_fonction", []))
+                user_data["agent_function"] = ','.join(user_data.get("agent_function", []))
                 user_data['user'] = user.id
 
                 # Validate and save agent data
