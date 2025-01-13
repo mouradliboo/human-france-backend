@@ -39,7 +39,7 @@ def list_agents(request):
 
         # Serialize the filtered users
        
-        return Response(serializer.data, status=drf_status.HTTP_200_OK)
+        return paginator.get_paginated_response(serializer.data)
 
     except Exception as e:
         # Handle unexpected errors
