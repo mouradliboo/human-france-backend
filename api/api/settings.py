@@ -118,6 +118,7 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 ALLOWED_HOSTS = ['human-france-api.up.railway.app', 'localhost', '127.0.0.1']
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
+    'https://human-france-front-zisj.vercel.app',
     # Add other allowed domains here
 ]
 
