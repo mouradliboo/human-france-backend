@@ -6,7 +6,7 @@ from .models import AgentProfile
 from .serializers import AgentListInscriptionSerializer,AgentDetailSerializer
 from .docstrings.list_agents_doc import agent_list_schema
 from .docstrings.agent_by_id_doc import agent_detail_schema,patch_agent_schema,delete_agent_schema
-
+from .pagination import CustomPageNumberPagination
 class MyLimitOffsetPagination(LimitOffsetPagination):
     
   default_limit=9
@@ -25,7 +25,7 @@ def list_agents(request):
         
         
         
-        paginator = MyLimitOffsetPagination()
+        paginator = CustomPageNumberPagination()
     
     # Paginate the queryset
         paginated_queryset = paginator.paginate_queryset(agents, request)
