@@ -7,44 +7,44 @@ from .serializers import AgentListInscriptionSerializer,AgentDetailSerializer
 from .docstrings.list_agents_doc import agent_list_schema
 from .docstrings.agent_by_id_doc import agent_detail_schema,patch_agent_schema,delete_agent_schema
 from .pagination import CustomPageNumberPagination
-class MyLimitOffsetPagination(LimitOffsetPagination):
-    
-  default_limit=9
-@agent_list_schema()
-@api_view(['GET'])
-def list_agents(request):
-    try:
-        # Get the `status` query parameter
-        status_param = request.query_params.get('status', 'approved')
+from rest_framework.views import APIView
+from rest_framework import mixins ,generics
+from drf_spectacular.utils import extend_schema,OpenApiParameter,OpenApiTypes
+import  django_filters
+from rest_framework import filters
+class AgentListFilter(django_filters.FilterSet):
+    agent_function = django_filters.CharFilter(field_name="agent_function",lookup_expr='icontains')
+    ville = django_filters.CharFilter(field_name="ville",lookup_expr='iexact')
+    status = django_filters.CharFilter(field_name="status",lookup_expr='exact')
 
- 
-            # Filter users based on the provided status
-        agents = AgentProfile.objects.filter(status=status_param)
-        
-        print(len(agents))
-        
-        
-        
-        paginator = CustomPageNumberPagination()
-    
-    # Paginate the queryset
-        paginated_queryset = paginator.paginate_queryset(agents, request)
-        print(paginated_queryset)
-    
-    # Serialize the paginated data
-
-    
-        serializer=AgentDetailSerializer(paginated_queryset,many=True)
+    class Meta:
+        model = AgentProfile
+        fields = ['agent_function',"ville","status"]
+class AgentList(generics.ListAPIView): 
+    model = AgentProfile
+    serializer_class = AgentDetailSerializer
+   
+    pagination_class= CustomPageNumberPagination
+    queryset=AgentProfile.objects.all()
+    filter_backends = (django_filters.rest_framework.DjangoFilterBackend,filters.SearchFilter)
+    filterset_class = AgentListFilter
+   
+    search_fields = ['^user__first_name','^user__last_name','^user__email']
    
 
-        # Serialize the filtered users
+    @extend_schema(
+    summary="List Agents",
        
-        return paginator.get_paginated_response(serializer.data)
+    description="Retrieve a paginated list of agents with filtering and search capabilities.",
+    responses={200: AgentDetailSerializer(many=True)}
+)
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
-    except Exception as e:
-        # Handle unexpected errors
-        return Response({"error": str(e)}, status=drf_status.HTTP_400_BAD_REQUEST)
-    
+
+
+
+  
 
 
 @delete_agent_schema()

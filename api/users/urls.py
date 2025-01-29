@@ -1,7 +1,7 @@
 from django.urls import path,include
-from .views import list_agents,agentDetail
+from .views import agentDetail,AgentList
 urlpatterns = [
-    path('agents/', list_agents),
+    path('agents/', AgentList.as_view()),
    path('agents/<int:pk>/', agentDetail),   
    ]
 # Create

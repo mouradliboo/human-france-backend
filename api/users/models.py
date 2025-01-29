@@ -11,7 +11,8 @@ class AgentProfile(models.Model):
     ]
     STATUS_CHOICES = [
         ('pending', 'Pending'),
-        ('approved', 'Approved'),
+        ('approved', 'Approved')
+        ,('refused','Refused'),
     ]
 
     id = models.BigAutoField(primary_key=True)
@@ -26,6 +27,7 @@ class AgentProfile(models.Model):
     driver_licence_type = models.CharField(max_length=2, choices=DRIVER_LICENCE_CHOICES, default='N')
     emergency_contact_name = models.CharField(max_length=100)
     emergency_contact_phone = models.CharField(max_length=20)
+    ville = models.CharField(max_length=100,null=True,blank=True,default="paris")
     diplomes = models.JSONField(null=True, blank=True)
     experience = models.JSONField(null=True, blank=True)
     date_of_birth = models.DateField()
