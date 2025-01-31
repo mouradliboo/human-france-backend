@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_filters',
-
+ 'planning',
     'drf_yasg',
     'authentication',
     'users',

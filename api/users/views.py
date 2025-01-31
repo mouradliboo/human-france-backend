@@ -2,8 +2,9 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status as drf_status
 from rest_framework.pagination import LimitOffsetPagination
-from .models import AgentProfile
-from .serializers import AgentListInscriptionSerializer,AgentDetailSerializer
+from .models import AgentProfile,Clients
+from authentication.models import CustomUser
+from .serializers import AgentListInscriptionSerializer,AgentDetailSerializer,ClientsSerializer
 from .docstrings.list_agents_doc import agent_list_schema
 from .docstrings.agent_by_id_doc import agent_detail_schema,patch_agent_schema,delete_agent_schema
 from .pagination import CustomPageNumberPagination
@@ -12,14 +13,7 @@ from rest_framework import mixins ,generics
 from drf_spectacular.utils import extend_schema,OpenApiParameter,OpenApiTypes
 import  django_filters
 from rest_framework import filters
-class AgentListFilter(django_filters.FilterSet):
-    agent_function = django_filters.CharFilter(field_name="agent_function",lookup_expr='iexact')
-    ville = django_filters.CharFilter(field_name="ville",lookup_expr='iregex')
-    status = django_filters.CharFilter(field_name="status",lookup_expr='exact')
-
-    class Meta:
-        model = AgentProfile
-        fields = ['agent_function',"ville","status"]
+from .filters import AgentListFilter
 class AgentList(generics.ListAPIView): 
     model = AgentProfile
     serializer_class = AgentDetailSerializer
@@ -29,9 +23,7 @@ class AgentList(generics.ListAPIView):
     filter_backends = (django_filters.rest_framework.DjangoFilterBackend,filters.SearchFilter)
     filterset_class = AgentListFilter
    
-    search_fields = ['^user__first_name','^user__last_name','^user__email']
-   
-
+    search_fields = ['^user__first_name','^user__last_name','^user__email'] 
     @extend_schema(
     summary="List Agents",
        
@@ -44,7 +36,28 @@ class AgentList(generics.ListAPIView):
 
 
 
+
+class ClientsList(generics.ListCreateAPIView):
+    model = Clients
+    serializer_class = ClientsSerializer
+    pagination_class= CustomPageNumberPagination
+    queryset=Clients.objects.all()
+   
+
+
+    
+
+    
+    
   
+  
+
+
+
+
+
+
+
 
 
 @delete_agent_schema()

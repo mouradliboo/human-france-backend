@@ -41,4 +41,5 @@ urlpatterns = [
   
     path('api/v1/auth/' , include('authentication.urls')),
     path('api/v1/users/', include('users.urls')),
+    path('api/v1/planning/', include('planning.urls')),
 ]

@@ -42,3 +42,21 @@ class AgentProfile(models.Model):
 
     def __str__(self):
         return f"Agent Profile for {self.user.first_name} {self.user.last_name}"
+    
+class Clients(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    company_name = models.CharField(max_length=255)
+    email = models.EmailField(max_length=150,unique=True, null=True, blank=True)
+    address = models.TextField()
+    postal_code = models.CharField(max_length=20)
+    city = models.CharField(max_length=100)
+    country = models.CharField(max_length=100)
+    phone = models.CharField(max_length=20)
+    created_at = models.DateTimeField(default=now, editable=False)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Client Profile for {self.first_name} {self.last_name}"
+    

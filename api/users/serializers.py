@@ -1,9 +1,13 @@
 from .models import CustomUser
 from rest_framework import serializers
-from .models import AgentProfile
+from .models import AgentProfile,Clients
 
 
-
+class ClientsSerializer(serializers.ModelSerializer):   
+    class Meta:
+        model = Clients
+        fields = ['id','first_name','last_name','email']
+       
 class UserSerializerForInscription(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
