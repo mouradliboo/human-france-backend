@@ -48,11 +48,11 @@ INSTALLED_APPS = [
      'rest_framework',
     'rest_framework_simplejwt',
     'django.contrib.sessions',
+    'django_filters',
+    'drf_yasg',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_filters',
  'planning',
-    'drf_yasg',
     'authentication',
     'users',
 ]
