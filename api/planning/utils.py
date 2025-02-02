@@ -30,4 +30,4 @@ def calculate_all_hours(ligne):
     else:
         hours = time_difference_in_hours(start_hour, end_hour)
 
-    return hours
+    return abs(hours)
