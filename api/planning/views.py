@@ -1,14 +1,17 @@
 from django.shortcuts import render
 from rest_framework import generics
 from .models import Planning, Ligne
-from .serializers import PlanningSerializer,LigneSerializer
+from .serializers import PlanningSerializer,LigneSerializer,LignesSerializerForPlanning
 from django.db import DatabaseError, transaction,IntegrityError
 from rest_framework.response import Response
 from rest_framework import status
 from users.pagination import CustomPageNumberPagination
+from django.shortcuts import get_object_or_404
+from .models import Planning, Ligne
 from rest_framework import filters
 import django_filters
 from .filters import PlanningListFilter
+
 
 from .utils import calculate_all_hours
 # Create your views he
@@ -68,7 +71,18 @@ class PlanningList(generics.ListCreateAPIView):
 class PlanningDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Planning.objects.all()
     serializer_class = PlanningSerializer
+    def get(self,request,*args,**kwargs):
+        planning = get_object_or_404(Planning, pk=kwargs.get("pk"))  # Returns 404 if not found
+        lignes = Ligne.objects.filter(planning=planning)
     
-    
-    
-    
+        planning_serializer = PlanningSerializer(planning)
+        lignes_serializer = LignesSerializerForPlanning(lignes, many=True)
+
+        data = {
+        "planning": {
+            **planning_serializer.data,
+            "lignes": lignes_serializer.data
+        }
+    }
+
+        return Response(data)
