@@ -20,7 +20,7 @@ class Ligne(models.Model):
     ('Adjoint chef de site', 'adjoint_chef_site'),
     ('Chef d’équipe','chef_equipe'),
     ('agent_mobile', 'Agent mobile'),
-    ('Chef de poste', 'chef_poste'),
+    ('chef_poste', 'chef_poste'),
     ('Opérateur vidéo SCT 1', 'operateur_video_sct1'),
     ('Opérateur vidéo SCT 2', 'operateur_video_sct2'),
     ('agent_rondier', 'Agent rondier'),
