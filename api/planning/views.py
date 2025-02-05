@@ -40,7 +40,7 @@ class PlanningList(generics.ListCreateAPIView):
                         print(ligne)
                         if ligne_serializer.is_valid():
                             ligne_serializer.save()
-                            hours += calculate_all_hours(ligne)*ligne["month_days"].count("y")
+                            hours += calculate_all_hours(ligne)*(ligne["month_days"].count("y"))
 
                             
                         
