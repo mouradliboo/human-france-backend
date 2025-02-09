@@ -1,5 +1,5 @@
 from datetime import datetime
-
+from .models import Ligne,Planning
 def calculate_all_hours(ligne):
     def parse_time(time_str):
         """Convert time string to datetime.time object"""
@@ -21,7 +21,7 @@ def calculate_all_hours(ligne):
     def time_difference_in_hours(start, end):
         start_time = datetime.combine(datetime.today(), start)
         end_time = datetime.combine(datetime.today(), end)
-        diff = end_time - start_time
+        diff =abs( end_time - start_time)
         return diff.total_seconds() / 3600  # Convert seconds to hours
 
     # Calculate the total hours
@@ -29,5 +29,14 @@ def calculate_all_hours(ligne):
         hours = time_difference_in_hours(end_cutoff, end_hour) + time_difference_in_hours(start_hour, start_cutoff)
     else:
         hours = time_difference_in_hours(start_hour, end_hour)
+    if not ligne["isPausePaid"]:
+        hours -= ligne["pause"]
+    hours = hours*ligne["month_days"].count("y")
 
-    return abs(hours)
+    return hours
+
+def calculate_volume_horaire(planning):
+ lignes = Ligne.objects.filter(planning=planning)
+    
+ return   sum(  calculate_all_hours(ligne) for ligne in lignes)
+ 

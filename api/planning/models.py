@@ -38,6 +38,8 @@ class Ligne(models.Model):
     month_days = models.CharField(max_length=60)
     selected_days = models.CharField(max_length=100,null=True, blank=True)
     pause = models.IntegerField()
+    isPausePaid = models.BooleanField(default=False)
+    
     agent_number = models.IntegerField()
     start_hour = models.TimeField()
     end_hour = models.TimeField()
