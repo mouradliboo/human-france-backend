@@ -64,7 +64,7 @@ class Planning(models.Model):
     state = models.CharField(max_length=20, choices=STATE_CHOICES, default='draft') 
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
-    
+    start_planning_date = models.DateTimeField()
 
     def __str__(self):
         return f"Planning {self.id} ({self.site_name})"

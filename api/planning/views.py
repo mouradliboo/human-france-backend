@@ -86,6 +86,7 @@ class PlanningList(generics.ListCreateAPIView):
                     sid = transaction.savepoint()
                     Planning= Planning_serializer.save()
                     hours =0
+                    min_date = None
                     for ligne in request.data['lignes']:
                         print(Planning_serializer.validated_data)
                         ligne['planning'] = Planning.id
@@ -93,6 +94,7 @@ class PlanningList(generics.ListCreateAPIView):
                         print(ligne)
                         if ligne_serializer.is_valid():
                             ligne_serializer.save()
+                            
                             hours += calculate_all_hours(ligne)                            
                         
                         else:
