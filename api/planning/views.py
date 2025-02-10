@@ -81,9 +81,9 @@ class PlanningList(generics.ListCreateAPIView):
               
             
                 Planning_serializer = PlanningSerializer(data=request.data)
-                
+                sid = transaction.savepoint()
+
                 if Planning_serializer.is_valid():
-                    sid = transaction.savepoint()
                     Planning= Planning_serializer.save()
                     hours =0
                     min_date = None
