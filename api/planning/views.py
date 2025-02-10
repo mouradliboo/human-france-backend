@@ -44,7 +44,7 @@ class LigneList(generics.ListCreateAPIView):
         status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
         planning = Planning.objects.get(id=data.planning)
         volume_horaire = calculate_volume_horaire(planning)
-        planning.total_hours = volume_horaire
+        planning.total_hours = volume_horaire["volume_horaire"]
         planning.save()
         return Response(LigneSerializer(ligne).data, status=status_code)
       except IntegrityError as e:
@@ -63,9 +63,9 @@ class LigneDetail(generics.RetrieveUpdateDestroyAPIView):
         """Handles DELETE request, calls function after deletion."""
         instance_id = instance.id 
         planning = instance.planning# Store ID before deleting
-        #instance.delete()          # ✅ Default behavior (delete)
+        instance.delete()          # ✅ Default behavior (delete)
         volume_horaire = calculate_volume_horaire(planning)
-        planning.total_hours = volume_horaire
+        planning.total_hours = volume_horaire["volume_horaire"]
         planning.save()
 class PlanningList(generics.ListCreateAPIView):
     queryset = Planning.objects.all()
@@ -143,7 +143,54 @@ class PlanningDetail(generics.RetrieveUpdateDestroyAPIView):
 
         return Response(data)
     def patch(self,request,*args,**kwargs):
+     try:
         planning = get_object_or_404(Planning, pk=kwargs.get("pk"))
+        shouldUpdateTime = False
         if request.data.get("lignes"):
-            lignes = request.data.pop("lignes")
-            
+            shouldUpdateTime = True
+            for ligne in request.data["lignes"]:
+                ligne_id = ligne.get("id")
+                if ligne_id:
+                  ligne_to_update =  Ligne.objects.filter(id=ligne_id)
+                  print("hhhhhhh id"  )
+                  ligne_serializer = LigneSerializer(ligne_to_update, data=ligne, partial=True)
+                  if ligne_serializer.is_valid():
+                       print(" saved id")
+                       ligne_serializer.save()
+                       print("hhhh")
+                  else:
+                        return Response(ligne.errors, status=status.HTTP_400_BAD_REQUEST)
+                    
+                else:
+                    ligne= LigneSerializer(data=ligne)
+                    if ligne.is_valid():
+                          print('no id save')
+                          ligne.save()
+                    else:
+                            print("no id error serializer")
+                            return Response(ligne.errors, status=status.HTTP_400_BAD_REQUEST)
+        if request.data("site_name"):
+           print('hhh')
+           planning.site_name = request.data("site_name")
+           print("errorrrrrr")
+        if request.data("client"):
+          planning.client = request.data("client")
+        if request.data("state"):
+            planning.state= request.data("state")
+        if shouldUpdateTime:
+            volume_horaire = calculate_volume_horaire(planning)
+            planning.total_hours = volume_horaire["volume_horaire"]
+            planning.start_planning_date = volume_horaire["start_hour"]
+        planning.save()
+        return Response(PlanningSerializer(planning).data)
+    
+     except IntegrityError as e:
+            print(e)
+            return Response({"error":"IntegrityError"},status=status.HTTP_400_BAD_REQUEST)
+     except DatabaseError as e:
+            print(e)
+            return Response({"error":"DatabaseError"},status=status.HTTP_400_BAD_REQUEST)
+     except Exception as e:
+            print(e)
+            return Response({"error":"Error"},status=status.HTTP_400_BAD_REQUEST)
+                    
