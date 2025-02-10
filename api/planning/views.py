@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics
-from .models import Planning, Ligne
-from .serializers import PlanningSerializer,LigneSerializer,LignesSerializerForPlanning
+from .models import Planning, Ligne, Conditions
+from .serializers import PlanningSerializer,LigneSerializer,LignesSerializerForPlanning,ConditionsSerializer
 from django.db import DatabaseError, transaction,IntegrityError
 from rest_framework.response import Response
 from rest_framework import status
@@ -199,3 +199,36 @@ class PlanningDetail(generics.RetrieveUpdateDestroyAPIView):
         print(e)
         transaction.savepoint_rollback(sid)
         return Response({"error": "Error"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class ConditionsList(generics.ListCreateAPIView):
+    queryset = Conditions.objects.all()
+    serializer_class = ConditionsSerializer
+    def post(request,*args,**kargs):
+        try:
+           
+
+            Conditions_serializer = ConditionsSerializer(data=request.data)
+            if Conditions_serializer.is_valid():
+                conditions = Conditions_serializer.save()
+                planning = Planning.objects.get(id=request.data.planning)
+                planning.conditions = conditions
+                planning.save()
+                return Response(Conditions_serializer.data,status=status.HTTP_201_CREATED)
+            else:
+                return Response(Conditions_serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        except IntegrityError as e:
+            print(e)
+            return Response({"error":"IntegrityError"},status=status.HTTP_400_BAD_REQUEST)
+        except DatabaseError as e:
+            print(e)
+            return Response({"error":"DatabaseError"},status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print(e)
+            return Response({"error":"DatabaseError"},status=status.HTTP_400_BAD_REQUEST)
+
+# Retrieve, Update, and Delete View for a Single Condition
+class ConditionsDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Conditions.objects.all()
+    serializer_class = ConditionsSerializer

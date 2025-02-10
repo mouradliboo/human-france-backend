@@ -54,6 +54,27 @@ class Ligne(models.Model):
         return f"Ligne {self.id} ({self.agent_type})"
 
 
+
+
+class Conditions(models.Model):
+    SALARY_TYPES = [
+        ('net', 'Net'),
+        ('brute', 'Brute'),
+    ]
+    
+    description = models.TextField()
+    hour_salary = models.FloatField()
+    salary_type = models.CharField(max_length=100, choices=SALARY_TYPES)
+    minimal_hours = models.IntegerField()
+    maximal_hours = models.IntegerField(null=True, blank=True)
+    tenues = models.CharField(max_length=255,null=True, blank=True)
+    languages = models.CharField(max_length=255)
+    experience = models.JSONField(null=True, blank=True)
+    def __str__(self):
+        return f"Conditions {self.id} ({self.agent_type})"
+
+
+
 class Planning(models.Model):
     id = models.BigAutoField(primary_key=True)
     STATE_CHOICES = [
@@ -68,6 +89,7 @@ class Planning(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
     start_planning_date = models.DateField(default ="2025-02-01")
+    conditions =models.OneToOneField(Conditions, related_name='condition',null=True, blank=True,on_delete=models.CASCADE)
 
     def __str__(self):
         return f"Planning {self.id} ({self.site_name})"

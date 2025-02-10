@@ -1,7 +1,7 @@
 
         
 import django_filters
-from .models import Planning
+from .models import Planning,Conditions
 
 class PlanningListFilter(django_filters.FilterSet):
     filter_date = django_filters.CharFilter(field_name="start_planning_date", lookup_expr="icontains")  
@@ -12,5 +12,11 @@ class PlanningListFilter(django_filters.FilterSet):
         model = Planning
         fields = ['updated_at']
 
+class ConditionFilter(django_filters.FilterSet):
+    planning = django_filters.NumberFilter(field_name="planning", lookup_expr="icontains")  
+ 
+    class Meta:
+        model = Conditions
+        fields = ['planning']
         
         
