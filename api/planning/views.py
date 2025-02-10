@@ -11,6 +11,7 @@ from .models import Planning, Ligne
 from rest_framework import filters
 import django_filters
 from .filters import PlanningListFilter
+from users.models import Clients
 
 
 from .utils import calculate_all_hours,calculate_volume_horaire
@@ -142,55 +143,59 @@ class PlanningDetail(generics.RetrieveUpdateDestroyAPIView):
     }
 
         return Response(data)
-    def patch(self,request,*args,**kwargs):
+    def patch(self, request, *args, **kwargs):
      try:
         planning = get_object_or_404(Planning, pk=kwargs.get("pk"))
+        sid = transaction.savepoint()
+
         shouldUpdateTime = False
         if request.data.get("lignes"):
             shouldUpdateTime = True
             for ligne in request.data["lignes"]:
                 ligne_id = ligne.get("id")
                 if ligne_id:
-                  ligne_to_update =  Ligne.objects.filter(id=ligne_id)
-                  print("hhhhhhh id"  )
-                  ligne_serializer = LigneSerializer(ligne_to_update, data=ligne, partial=True)
-                  if ligne_serializer.is_valid():
-                       print(" saved id")
-                       ligne_serializer.save()
-                       print("hhhh")
-                  else:
-                        return Response(ligne.errors, status=status.HTTP_400_BAD_REQUEST)
-                    
+                    try:
+                        ligne_to_update = Ligne.objects.get(id=ligne_id)  # ✅ FIXED: Use `.get()`
+                        ligne_serializer = LigneSerializer(ligne_to_update, data=ligne, partial=True)
+                        if ligne_serializer.is_valid():
+                            ligne_serializer.save()
+                        else:
+                            return Response(ligne_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                    except Ligne.DoesNotExist:
+                        return Response({"error": "Ligne not found"}, status=status.HTTP_404_NOT_FOUND)
                 else:
-                    ligne= LigneSerializer(data=ligne)
-                    if ligne.is_valid():
-                          print('no id save')
-                          ligne.save()
+                    ligne_serializer = LigneSerializer(data=ligne)
+                    if ligne_serializer.is_valid():
+                        ligne_serializer.save()
                     else:
-                            print("no id error serializer")
-                            return Response(ligne.errors, status=status.HTTP_400_BAD_REQUEST)
-        if request.data("site_name"):
-           print('hhh')
-           planning.site_name = request.data("site_name")
-           print("errorrrrrr")
-        if request.data("client"):
-          planning.client = request.data("client")
-        if request.data("state"):
-            planning.state= request.data("state")
+                        return Response(ligne_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        if request.data.get("site_name"):  # ✅ Fixed request.data["site_name"] to .get()
+            planning.site_name = request.data["site_name"]
+        if request.data.get("client"):
+            planning.client = Clients.objects.get(pk=request.data["client"])
+        if request.data.get("state"):
+            planning.state = request.data["state"]
+
         if shouldUpdateTime:
             volume_horaire = calculate_volume_horaire(planning)
+            print(volume_horaire)
             planning.total_hours = volume_horaire["volume_horaire"]
             planning.start_planning_date = volume_horaire["start_hour"]
+
+        transaction.savepoint_commit(sid)
         planning.save()
         return Response(PlanningSerializer(planning).data)
-    
+
      except IntegrityError as e:
-            print(e)
-            return Response({"error":"IntegrityError"},status=status.HTTP_400_BAD_REQUEST)
+        print(e)
+        transaction.savepoint_rollback(sid)
+        return Response({"error": "IntegrityError"}, status=status.HTTP_400_BAD_REQUEST)
      except DatabaseError as e:
-            print(e)
-            return Response({"error":"DatabaseError"},status=status.HTTP_400_BAD_REQUEST)
+        print(e)
+        transaction.savepoint_rollback(sid)
+        return Response({"error": "DatabaseError"}, status=status.HTTP_400_BAD_REQUEST)
      except Exception as e:
-            print(e)
-            return Response({"error":"Error"},status=status.HTTP_400_BAD_REQUEST)
-                    
+        print(e)
+        transaction.savepoint_rollback(sid)
+        return Response({"error": "Error"}, status=status.HTTP_400_BAD_REQUEST)

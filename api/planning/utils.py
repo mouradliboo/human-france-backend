@@ -43,12 +43,18 @@ def calculate_all_hours(ligne):
     print(hours)
 
     return hours
-
 def calculate_volume_horaire(planning):
  lignes = Ligne.objects.filter(planning=planning)
  lignes = LigneSerializer(lignes, many=True).data
-    
+ min_start_hour = None
+ for ligne in lignes:
+    ligne_start_hour = ligne["start_date"]
+    if min_start_hour is None or ligne_start_hour < min_start_hour:
+        min_start_hour = ligne_start_hour
+     
+
+ print(min_start_hour)
  return  {"volume_horaire": sum(  calculate_all_hours(ligne) for ligne in lignes),
-          "start_hour":min([ligne["start_hour"] for ligne in lignes]),
+          "start_hour": min_start_hour
  }
  
