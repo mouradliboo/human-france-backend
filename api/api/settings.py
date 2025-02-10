@@ -94,11 +94,19 @@ WSGI_APPLICATION = 'api.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'mediumclone_humanfrance',
+        'USER': '367579_abdallah',
+        'PASSWORD': 'abdallah',
+        'HOST': 'mysql-mediumclone.alwaysdata.net',  # Or your MySQL server's IP/hostname
+        'PORT': '3306',  # Default MySQL port
+         'OPTIONS': {
+            'charset': 'utf8mb4',  # Ensures proper UTF-8 support
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        }
     }
 }
-
+  
 #cloud config
 # settings.py
 
