@@ -7,26 +7,29 @@ import datetime
 class Ligne(models.Model):
     id = models.BigAutoField(primary_key=True)
     planning  = models.ForeignKey('Planning', on_delete=models.CASCADE, related_name='lignes')
-    AGENT_TYPES = [
 
-    ('Agent de sécurité confirmé', 'agent_securite_confirme'),
-    ('Agent de sécurité magasin prévol', 'agent_securite_magasin_prevol'),
-    ('Agent de sécurité filtrage', 'agent_securite_filtrage'),
-    ('Agent de sécurité qualifié', 'agent_securite_qualifie'),
-    ('Conducteur de chien', 'conducteur_chien'),
-    ('Agent de sécurité SSIAP1', 'agent_securite_SSIAP1'),
-    ('Agent de sécurité SSIAP2', 'agent_securite_SSIAP2'),
-    ('Agent de sécurité SSIAP3', 'agent_securite_SSIAP3'),
-    ('chef_de_site', 'Chef de site'),
-    ('adjoint_chef_site', 'Adjoint chef de site'),
-    ('chef_equipe', 'Chef d’équipe'),
-    ('Agent mobile', 'agent_mobile'),
-    ('chef_poste', 'chef_poste'),
-    ('operateur_video_sct1', 'Opérateur vidéo SCT 1'),
-    ('operateur_video_sct2', 'Opérateur vidéo SCT 2'),
-    ('Agent rondier', 'agent_rondier'),
-]
-  
+
+    AGENT_TYPES = [
+        ('agent_securite_confirme', 'Agent de sécurité confirmé'),
+        ('agent_securite_magasin_prevol', 'Agent de sécurité magasin prévol'),
+        ('agent_securite_filtrage', 'Agent de sécurité filtrage'),
+        ('agent_securite_qualifie', 'Agent de sécurité qualifié'),
+        ('conducteur_chien', 'Conducteur de chien'),
+        ('agent_securite_SSIAP1', 'Agent de sécurité SSIAP1'),
+        ('chef_equipe_SSIAP2', 'Chef d’équipe SSIAP2'),
+        ('chef_site_SSIAP3', 'Chef de site SSIAP3'),
+        ('agent_mobile', 'Agent mobile'),
+        ('agent_rondier', 'Agent rondier'),
+        ('chef_de_site', 'Chef de site'),
+        ('adjoint_chef_site', 'Adjoint chef de site'),
+        ('chef_equipe', 'Chef d’équipe'),
+        ('chef_poste', 'Chef de poste'),
+        ('operateur_video_sct1', 'Opérateur vidéo SCT 1'),
+        ('operateur_video_sct2', 'Opérateur vidéo SCT 2'),
+    ]
+
+
+
 
 
     
