@@ -94,6 +94,8 @@ class PlanningList(generics.ListCreateAPIView):
                         print(ligne)
                         if ligne_serializer.is_valid():
                             ligne_serializer.save()
+                            if min_date is None or min_date > ligne['start_date']:
+                                min_date = ligne['start_date']
                             
                             hours += calculate_all_hours(ligne)                            
                         
@@ -102,6 +104,7 @@ class PlanningList(generics.ListCreateAPIView):
                             return Response(ligne_serializer.errors,status=status.HTTP_400_BAD_REQUEST)
                     print(hours)
                     Planning_serializer.validated_data['total_hours'] = hours  # Update the field
+                    Planning_serializer.validated_data['start_planning_date'] = min_date  # Update the field
                     Planning_serializer.save(total_hours=hours)  # Pass the field while saving
                     transaction.savepoint_commit(sid)
                     return Response(Planning_serializer.data,status=status.HTTP_201_CREATED)

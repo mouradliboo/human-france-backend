@@ -32,7 +32,7 @@ def calculate_all_hours(ligne):
         hours = time_difference_in_hours(start_hour, end_hour)
     print("******1**\n")
     print(hours)
-    if not ligne["isPausePaid"]:
+    if ligne.get("isPausePaid")== False:
         hours -= ligne["pause"]/60
         print("******2**\n")
 
