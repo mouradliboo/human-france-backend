@@ -62,9 +62,8 @@ class LigneDetail(generics.RetrieveUpdateDestroyAPIView):
     def perform_destroy(self, instance):
         """Handles DELETE request, calls function after deletion."""
         instance_id = instance.id 
-        planning_id = instance.planning# Store ID before deleting
-        instance.delete()          # ✅ Default behavior (delete)
-        planning = Planning.objects.get(id=planning_id)
+        planning = instance.planning# Store ID before deleting
+        #instance.delete()          # ✅ Default behavior (delete)
         volume_horaire = calculate_volume_horaire(planning)
         planning.total_hours = volume_horaire
         planning.save()
@@ -82,6 +81,7 @@ class PlanningList(generics.ListCreateAPIView):
               
             
                 Planning_serializer = PlanningSerializer(data=request.data)
+                
                 if Planning_serializer.is_valid():
                     sid = transaction.savepoint()
                     Planning= Planning_serializer.save()

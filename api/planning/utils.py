@@ -1,5 +1,6 @@
 from datetime import datetime
 from .models import Ligne,Planning
+from .serializers import LigneSerializer
 def calculate_all_hours(ligne):
     def parse_time(time_str):
         """Convert time string to datetime.time object"""
@@ -29,14 +30,23 @@ def calculate_all_hours(ligne):
         hours = time_difference_in_hours(end_cutoff, end_hour) + time_difference_in_hours(start_hour, start_cutoff)
     else:
         hours = time_difference_in_hours(start_hour, end_hour)
+    print("******1**\n")
+    print(hours)
     if not ligne["isPausePaid"]:
-        hours -= ligne["pause"]
+        hours -= ligne["pause"]/60
+        print("******2**\n")
+
+        print(hours)
     hours = hours*ligne["month_days"].count("y")
+    print("******3**\n")
+
+    print(hours)
 
     return hours
 
 def calculate_volume_horaire(planning):
  lignes = Ligne.objects.filter(planning=planning)
+ lignes = LigneSerializer(lignes, many=True).data
     
  return   sum(  calculate_all_hours(ligne) for ligne in lignes)
  
