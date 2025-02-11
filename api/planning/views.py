@@ -13,6 +13,7 @@ import django_filters
 from .filters import PlanningListFilter
 from users.models import Clients
 import json
+from rest_framework.decorators import api_view
 
 
 from .utils import calculate_all_hours,calculate_volume_horaire
@@ -246,3 +247,17 @@ class ConditionsList(generics.ListCreateAPIView):
 class ConditionsDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Conditions.objects.all()
     serializer_class = ConditionsSerializer
+    
+@api_view(['GET'])
+def conditionsOfPlanning(request, pk):
+    try:
+        planning = Planning.objects.get(id=pk)
+        conditions = planning.conditions
+        conditions_serializer = ConditionsSerializer(conditions)
+        return Response(conditions_serializer.data)
+    except Planning.DoesNotExist:
+        return Response({"error": "Planning not found"}, status=status.HTTP_404_NOT_FOUND)
+    except Conditions.DoesNotExist:
+        return Response({"error": "Conditions not found"}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)

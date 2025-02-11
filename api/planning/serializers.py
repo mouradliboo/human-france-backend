@@ -24,7 +24,6 @@ class ConditionsSerializer(serializers.ModelSerializer):
 
 
 class PlanningSerializer(serializers.ModelSerializer):
-    conditions = ConditionsSerializer(read_only=True)
     class Meta:
         model = Planning
         fields = '__all__'
