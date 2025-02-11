@@ -12,6 +12,7 @@ from rest_framework import filters
 import django_filters
 from .filters import PlanningListFilter
 from users.models import Clients
+import json
 
 
 from .utils import calculate_all_hours,calculate_volume_horaire
@@ -205,28 +206,41 @@ class PlanningDetail(generics.RetrieveUpdateDestroyAPIView):
 class ConditionsList(generics.ListCreateAPIView):
     queryset = Conditions.objects.all()
     serializer_class = ConditionsSerializer
-    def post(request,*args,**kargs):
-        try:
-           
+    def post(self,request, *args, **kwargs):
+     try:
+         print(request.data)  # Debugging
 
-            Conditions_serializer = ConditionsSerializer(data=request.data)
-            if Conditions_serializer.is_valid():
-                conditions = Conditions_serializer.save()
-                planning = Planning.objects.get(id=request.data.planning)
-                planning.conditions = conditions
-                planning.save()
-                return Response(Conditions_serializer.data,status=status.HTTP_201_CREATED)
-            else:
-                return Response(Conditions_serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-        except IntegrityError as e:
-            print(e)
-            return Response({"error":"IntegrityError"},status=status.HTTP_400_BAD_REQUEST)
-        except DatabaseError as e:
-            print(e)
-            return Response({"error":"DatabaseError"},status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            print(e)
-            return Response({"error":"DatabaseError"},status=status.HTTP_400_BAD_REQUEST)
+        # Make a mutable copy of request.data
+
+        # Convert "experience" field to JSON string if it exists
+
+
+        # Serialize data
+         conditions_serializer = ConditionsSerializer(data=request.data)
+
+         if conditions_serializer.is_valid():
+            conditions = conditions_serializer.save()
+
+            # Retrieve planning object using the correct key
+            planning = Planning.objects.get(id=request.data["planning"])
+
+            # Link the new conditions to the planning instance
+            planning.conditions = conditions
+            planning.save()
+
+            return Response(conditions_serializer.data, status=status.HTTP_201_CREATED)
+         else:
+            return Response(conditions_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+     except IntegrityError as e:
+        print(e)
+        return Response({"error": "IntegrityError"}, status=status.HTTP_400_BAD_REQUEST)
+     except DatabaseError as e:
+        print(e)
+        return Response({"error": "DatabaseError"}, status=status.HTTP_400_BAD_REQUEST)
+     except Exception as e:
+        print(e)
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 # Retrieve, Update, and Delete View for a Single Condition
 class ConditionsDetail(generics.RetrieveUpdateDestroyAPIView):

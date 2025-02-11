@@ -89,7 +89,7 @@ class Planning(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
     start_planning_date = models.DateField(default ="2025-02-01")
-    conditions =models.OneToOneField(Conditions, related_name='condition',null=True, blank=True,on_delete=models.CASCADE)
+    conditions = models.OneToOneField(Conditions, related_name='condition',null=True, blank=True,on_delete=models.CASCADE)
 
     def __str__(self):
         return f"Planning {self.id} ({self.site_name})"
