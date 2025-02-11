@@ -1,7 +1,8 @@
+from django.db import connection
 from django.shortcuts import render
 from rest_framework import generics
 from .models import Planning, Ligne, Conditions
-from .serializers import PlanningSerializer,LigneSerializer,LignesSerializerForPlanning,ConditionsSerializer
+from .serializers import PlanningSerializer,LigneSerializer,PlanningSerializerForClient,LignesSerializerForPlanning,ConditionsSerializer
 from django.db import DatabaseError, transaction,IntegrityError
 from rest_framework.response import Response
 from rest_framework import status
@@ -261,3 +262,11 @@ def conditionsOfPlanning(request, pk):
         return Response({"error": "Conditions not found"}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+
+class PlanningListAgent(generics.ListCreateAPIView):
+    queryset =  Planning.objects.prefetch_related("lignes").all()
+    serializer_class = PlanningSerializerForClient
+    pagination_class= CustomPageNumberPagination
+   

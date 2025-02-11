@@ -27,3 +27,10 @@ class PlanningSerializer(serializers.ModelSerializer):
     class Meta:
         model = Planning
         fields = '__all__'
+
+class PlanningSerializerForClient(serializers.ModelSerializer):
+    lignes = LigneSerializer(many=True)
+    conditions = ConditionsSerializer()
+    class Meta:
+        model = Planning
+        fields = ["id","total_hours","site_name","state","lignes","start_planning_date","conditions"]
