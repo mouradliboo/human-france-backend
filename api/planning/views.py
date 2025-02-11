@@ -5,7 +5,7 @@ from .models import Planning, Ligne, Conditions
 from .serializers import PlanningSerializer,LigneSerializer,PlanningSerializerForClient,LignesSerializerForPlanning,ConditionsSerializer
 from django.db import DatabaseError, transaction,IntegrityError
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status,mixins
 from users.pagination import CustomPageNumberPagination
 from django.shortcuts import get_object_or_404
 from .models import Planning, Ligne
@@ -269,4 +269,14 @@ class PlanningListAgent(generics.ListCreateAPIView):
     queryset =  Planning.objects.prefetch_related("lignes").all()
     serializer_class = PlanningSerializerForClient
     pagination_class= CustomPageNumberPagination
+    
+    
+class PlanningListAgent(mixins.ListModelMixin,
+                  generics.GenericAPIView):
+    queryset =  Planning.objects.prefetch_related("lignes").all()
+    serializer_class = PlanningSerializerForClient
+    pagination_class= CustomPageNumberPagination
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
    
