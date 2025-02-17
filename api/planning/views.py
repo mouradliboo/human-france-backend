@@ -2,7 +2,7 @@ from django.db import connection
 from django.shortcuts import render
 from rest_framework import generics
 from .models import Planning, Ligne, Conditions
-from .serializers import PlanningSerializer,LigneSerializer,PlanningSerializerForClient,LignesSerializerForPlanning,ConditionsSerializer
+from .serializers import PlanningSerializer,LigneSerializer,PlanningSerializerForClient,PlanningSerializerForAgent,LignesSerializerForPlanning,ConditionsSerializer
 from django.db import DatabaseError, transaction,IntegrityError
 from rest_framework.response import Response
 from rest_framework import status,mixins
@@ -279,4 +279,13 @@ class PlanningListAgent(mixins.ListModelMixin,
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
+    
+    
+class PlanningAgentList(generics.ListCreateAPIView):
+    queryset = Planning.objects.all()
+    serializer_class = PlanningSerializerForAgent()
+    pagination_class= CustomPageNumberPagination
+  
+            
+    
    

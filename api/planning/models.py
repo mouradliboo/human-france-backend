@@ -80,6 +80,8 @@ class Planning(models.Model):
     STATE_CHOICES = [
         ('published', 'Published'),
         ('draft', 'Draft'),
+        ('archived', 'Archived'),
+        ('en_cours', 'En cours'),
      
     ]
     total_hours = models.IntegerField(default=0)
@@ -93,3 +95,28 @@ class Planning(models.Model):
 
     def __str__(self):
         return f"Planning {self.id} ({self.site_name})"
+
+
+class PlanningAgent(models.Model):
+    Status_Values=[
+        ('accepted', 'Accepted'),
+        ('refused', 'Refused'),
+        ('pending', 'Pending'),
+    ]
+    id = models.BigAutoField(primary_key=True)
+    planning = models.ForeignKey(Planning, on_delete=models.CASCADE, related_name='planning')
+    agent = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='agent')
+    status = models.CharField(max_length=20, choices=Status_Values, default='pending')
+    position = models.JSONField(null=True, blank=True)
+   
+    nbr_heure = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+    def __str__(self):
+        return f"PlanningAgent {self.id} ({self.agent})"
+    class Meta:
+        unique_together = ('planning', 'agent')  # Old method (still works)
+        # OR (Preferred for new Django versions)
+        constraints = [
+            models.UniqueConstraint(fields=['planning', 'agent'], name='unique_planning_agent')
+        ]
