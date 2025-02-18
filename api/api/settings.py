@@ -204,7 +204,17 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
+STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
 
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Where collected static files will be stored
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'api', 'openshift', 'static'),  # Ensure this directory exists
+]
 
 
 
