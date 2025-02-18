@@ -208,13 +208,12 @@ STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+print(BASE_DIR)
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Where collected static files will be stored
 STATIC_URL = '/static/'
-
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'api', 'openshift', 'static'),  # Ensure this directory exists
-]
+STATICFILES_DIRS = (
+    ('assets', 'api/openshift/static'),
+)
 
 
 
