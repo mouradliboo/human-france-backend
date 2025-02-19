@@ -2,7 +2,7 @@ from .models import Planning, Ligne, Conditions,PlanningAgent
 from users.models import Clients
 from rest_framework import serializers
 
-class Positionnement(serializers.ModelSerializer): 
+class PositionnementSerializer(serializers.ModelSerializer): 
     class Meta:
         model = PlanningAgent
         fields = '__all__'

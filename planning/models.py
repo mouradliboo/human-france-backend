@@ -109,6 +109,7 @@ class PlanningAgent(models.Model):
     status = models.CharField(max_length=20, choices=Status_Values, default='pending')
     demande = models.JSONField(null=True, blank=True)
     position = models.JSONField(null=True, blank=True)
+    agent_function = models.CharField(max_length=255)
     nbr_heure = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
