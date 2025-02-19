@@ -11,7 +11,7 @@ from django.shortcuts import get_object_or_404
 from .models import Planning, Ligne
 from rest_framework import filters
 import django_filters
-from .filters import PlanningListFilter
+from .filters import PlanningListFilter,PositionnementFilter
 from users.models import Clients
 import json
 from rest_framework.decorators import api_view
@@ -286,7 +286,9 @@ class Positionnement(generics.ListCreateAPIView):
     queryset = PlanningAgent.objects.all()
     serializer_class = PositionnementSerializer
     pagination_class= CustomPageNumberPagination
-        
+    filter_backends = (django_filters.rest_framework.DjangoFilterBackend,filters.SearchFilter)
+    filterset_class = PositionnementFilter
+    
         
     
     
