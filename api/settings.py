@@ -125,7 +125,7 @@ cloudinary.config(
 # Set Cloudinary as the default storage for media files
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
-ALLOWED_HOSTS = ['human-france-api.up.railway.app', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['human-france-api.up.railway.app',"web-production-e4d2d.up.railway.app", 'localhost', '127.0.0.1']
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'https://human-france-front-zisj.vercel.app',
@@ -168,7 +168,7 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME_LATE_USER': timedelta(days=1),
     'SLIDING_TOKEN_LIFETIME_LATE_USER': timedelta(days=30),
 }
-CSRF_TRUSTED_ORIGINS = ['https://human-france-api.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://human-france-api.up.railway.app',"https://web-production-e4d2d.up.railway.app/"]
 
 
 # Password validation
