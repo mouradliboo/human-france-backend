@@ -21,11 +21,13 @@ class ConditionFilter(django_filters.FilterSet):
         
 
 class PositionnementFilter(django_filters.FilterSet):
-    status = django_filters.NumberFilter(field_name="status", lookup_expr="icontains")  
     planning = django_filters.NumberFilter(field_name="planning", lookup_expr="icontains")
+    hours_number = django_filters.NumberFilter(field_name="nbr_heure", lookup_expr="icontains")
+    status = django_filters.CharFilter(field_name="status",lookup_expr='exact')
+
  
     class Meta:
         model = PlanningAgent
-        fields = ['status','planning']
+        fields = ['status','planning','hours_number']
         
         
