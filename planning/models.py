@@ -1,6 +1,6 @@
 from django.db import models
 from authentication.models import CustomUser
-from users.models import Clients
+from users.models import Clients,AgentProfile
 # Create your models here.
 
 import datetime
@@ -105,7 +105,7 @@ class PlanningAgent(models.Model):
     ]
     id = models.BigAutoField(primary_key=True)
     planning = models.ForeignKey(Planning, on_delete=models.CASCADE, related_name='planning')
-    agent = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='agent')
+    agent = models.ForeignKey(AgentProfile, on_delete=models.CASCADE, related_name='agent')
     status = models.CharField(max_length=20, choices=Status_Values, default='pending')
     demande = models.JSONField(null=True, blank=True)
     position = models.JSONField(null=True, blank=True)
