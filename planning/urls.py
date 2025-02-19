@@ -9,6 +9,6 @@ urlpatterns = [
     path('conditions/',ConditionsList.as_view(),name='Conditions-list'),
     path('conditions/<int:pk>/',ConditionsDetail.as_view(),name='Conditions-detail'),
     path('planning/agents/',PlanningListAgent.as_view(),name='planning-list-agent') ,
-    path('planning/:id/agents/',Positionnement.as_view(),name='planning-list-agent')
+    path('planning/<int:id>/agents/',Positionnement.as_view(),name='planning-list-agent')
    
    ]
