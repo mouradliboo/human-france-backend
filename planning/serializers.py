@@ -1,8 +1,11 @@
-from .models import Planning, Ligne, Conditions
+from .models import Planning, Ligne, Conditions,PlanningAgent
 from users.models import Clients
 from rest_framework import serializers
 
-
+class Positionnement(serializers.ModelSerializer): 
+    class Meta:
+        model = PlanningAgent
+        fields = '__all__'
 class LigneSerializer(serializers.ModelSerializer):
     
     class Meta:

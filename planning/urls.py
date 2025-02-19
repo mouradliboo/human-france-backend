@@ -8,6 +8,7 @@ urlpatterns = [
     path('lignes/<int:pk>/', LigneDetail.as_view(), name='ligne-detail'),
     path('conditions/',ConditionsList.as_view(),name='Conditions-list'),
     path('conditions/<int:pk>/',ConditionsDetail.as_view(),name='Conditions-detail'),
-    path('planning/agents/',PlanningListAgent.as_view(),name='planning-list-agent') 
+    path('planning/agents/',PlanningListAgent.as_view(),name='planning-list-agent') ,
+  
    
    ]

@@ -265,11 +265,7 @@ def conditionsOfPlanning(request, pk):
     
     
 
-class PlanningListAgent(generics.ListCreateAPIView):
-    queryset =  Planning.objects.prefetch_related("lignes").all()
-    serializer_class = PlanningSerializerForClient
-    pagination_class= CustomPageNumberPagination
-    
+
     
 class PlanningListAgent(mixins.ListModelMixin,
                   generics.GenericAPIView):
@@ -285,6 +281,9 @@ class PlanningAgentList(generics.ListCreateAPIView):
     queryset = Planning.objects.all()
     serializer_class = PlanningSerializerForAgent()
     pagination_class= CustomPageNumberPagination
+    
+    
+    
   
             
     

@@ -107,8 +107,8 @@ class PlanningAgent(models.Model):
     planning = models.ForeignKey(Planning, on_delete=models.CASCADE, related_name='planning')
     agent = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='agent')
     status = models.CharField(max_length=20, choices=Status_Values, default='pending')
+    demande = models.JSONField(null=True, blank=True)
     position = models.JSONField(null=True, blank=True)
-   
     nbr_heure = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
@@ -120,3 +120,7 @@ class PlanningAgent(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['planning', 'agent'], name='unique_planning_agent')
         ]
+        
+        
+
+    
