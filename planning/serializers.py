@@ -4,6 +4,11 @@ from rest_framework import serializers
 from users.serializers import AgentDetailSerializer
 
 
+class PositionnementPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlanningAgent
+        fields = '__all__'
+
 class PositionnementSerializer(serializers.ModelSerializer): 
     agent = AgentDetailSerializer()
 

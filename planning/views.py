@@ -2,7 +2,7 @@ from django.db import connection
 from django.shortcuts import render
 from rest_framework import generics
 from .models import Planning, Ligne, Conditions,PlanningAgent
-from .serializers import PlanningSerializer,LigneSerializer,PositionnementSerializer,PlanningSerializerForClient,PlanningSerializerForAgent,LignesSerializerForPlanning,ConditionsSerializer
+from .serializers import PlanningSerializer,LigneSerializer,PositionnementSerializer,PositionnementPostSerializer,PlanningSerializerForClient,PlanningSerializerForAgent,LignesSerializerForPlanning,ConditionsSerializer
 from django.db import DatabaseError, transaction,IntegrityError
 from rest_framework.response import Response
 from rest_framework import status,mixins
@@ -282,12 +282,21 @@ class PlanningAgentList(generics.ListCreateAPIView):
     serializer_class = PlanningSerializerForAgent()
     pagination_class= CustomPageNumberPagination
     
-class Positionnement(generics.ListCreateAPIView):
+class PositionnementList(generics.ListCreateAPIView):
     queryset = PlanningAgent.objects.all()
-    serializer_class = PositionnementSerializer
     pagination_class= CustomPageNumberPagination
     filter_backends = (django_filters.rest_framework.DjangoFilterBackend,filters.SearchFilter)
     filterset_class = PositionnementFilter
+    def get_serializer_class(self):
+     if self.request.method == 'POST':
+        return PositionnementPostSerializer
+     return PositionnementSerializer
+    
+    
+class PositionnementDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = PlanningAgent.objects.all()
+    serializer_class = PositionnementSerializer
+    
     
         
     
