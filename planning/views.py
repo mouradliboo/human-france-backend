@@ -299,6 +299,7 @@ class PositionnementDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PositionnementSerializer
     
     
+    
         
     
     
