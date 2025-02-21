@@ -21,7 +21,7 @@ class ConditionFilter(django_filters.FilterSet):
         
 
 class PositionnementFilter(django_filters.FilterSet):
-    planning = django_filters.NumberFilter(field_name="planning", lookup_expr="icontains")
+    planning = django_filters.NumberFilter(field_name="planning", lookup_expr="exact")
     hours_number = django_filters.NumberFilter(field_name="nbr_heure", lookup_expr="icontains")
     status = django_filters.CharFilter(field_name="status",lookup_expr='exact')
 
