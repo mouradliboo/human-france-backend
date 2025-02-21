@@ -290,7 +290,13 @@ class PositionnementList(generics.ListCreateAPIView):
     def get_serializer_class(self):
      if self.request.method == 'POST':
         return PositionnementPostSerializer
-     return PositionnementSerializer
+     return 
+    def get(self, request, *args, **kwargs):
+        planning_id = kwargs.get("id")
+        planning = Planning.objects.get(id=planning_id)
+        positionnement = PlanningAgent.objects.filter(planning=planning)
+        serializer = PositionnementSerializer(positionnement, many=True)
+        return Response(serializer.data)
     
     
 class PositionnementDetail(generics.RetrieveUpdateDestroyAPIView):
