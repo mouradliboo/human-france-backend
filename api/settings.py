@@ -168,7 +168,7 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME_LATE_USER': timedelta(days=1),
     'SLIDING_TOKEN_LIFETIME_LATE_USER': timedelta(days=30),
 }
-CSRF_TRUSTED_ORIGINS = ['https://human-france-api.up.railway.app',"https://web-production-e4d2d.up.railway.app/"]
+CSRF_TRUSTED_ORIGINS = ['https://human-france-api.up.railway.app',"https://web-production-e4d2d.up.railway.app"]
 
 
 # Password validation
