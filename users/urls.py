@@ -3,6 +3,6 @@ from .views import agentDetail,AgentList,ClientsList
 urlpatterns = [
     path('agents/', AgentList.as_view()),
    path('agents/<int:pk>/', agentDetail),  
-   path('clients/',ClientsList.as_view()) 
+   path('clients/',ClientsList.as_view()) ,
    ]
 # Create

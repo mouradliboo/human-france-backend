@@ -54,7 +54,7 @@ def calculate_volume_horaire(planning):
      
 
  print(min_start_hour)
- return  {"volume_horaire": sum(  calculate_all_hours(ligne) for ligne in lignes),
+ return  {"volume_horaire": sum(  calculate_all_hours(ligne)*ligne["agent_number"] for ligne in lignes),
           "start_hour": min_start_hour
  }
  
