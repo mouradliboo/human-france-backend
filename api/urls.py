@@ -20,7 +20,10 @@ from drf_yasg.views import get_schema_view
 from rest_framework.permissions import AllowAny
 from drf_yasg import openapi
 from authentication.models import CustomUser
-
+import pdfkit
+from rest_framework.response import Response
+from xhtml2pdf import pisa
+from rest_framework.decorators import api_view
 schema_view = get_schema_view(
     openapi.Info(
         title="My API",
@@ -33,12 +36,23 @@ schema_view = get_schema_view(
     public=True,
     permission_classes=[AllowAny],
 )
+@api_view(['GET'])
+def test(request):
+   
+  print("hhhhhhhhhhhhhhh")
+
+  html_content = "<h1 style='color: red;'>Hello, PDF!</h1>"
+  with open("pdfs/out.pdf", "wb") as pdf_file:
+     pisa.CreatePDF(html_content, dest=pdf_file)
+
+  return Response({"message":"pdf generated"})
 
 urlpatterns = [
     path('admin/', admin.site.urls),
    re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
   
-  
+  path('',test),
+                     
     path('api/v1/auth/' , include('authentication.urls')),
     path('api/v1/users/', include('users.urls')),
     path('api/v1/', include('planning.urls')),

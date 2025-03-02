@@ -1,0 +1,2 @@
+#docker will ignore this files when building the image
+pdfs/

@@ -35,8 +35,7 @@ class AgentList(generics.ListAPIView):
 
 
 
-
-
+    
 class ClientsList(generics.ListCreateAPIView):
     model = Clients
     serializer_class = ClientsSerializer

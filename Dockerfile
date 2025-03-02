@@ -1,31 +1,17 @@
+# Pulling the latest Python image (better to specify a version)
+FROM python:latest
 
-# Use the official Python image as a base
-FROM python:3.10-slim
+# Set the working directory inside the container  
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+WORKDIR  /app
+# Copy source code into the container  
+COPY . .
 
-# Set the working directory inside the container
-WORKDIR /app
+# Install dependencies in one RUN command to optimize layers  
+RUN pip install --no-cache-dir -r requirements.txt  
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    libpq-dev \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+# Expose port 8000  
+EXPOSE 8000  
 
-# Copy the requirements.txt file into the container
-COPY requirements.txt /app/
-
-# Install Python dependencies
-RUN pip install --no-cache-dir -r /app/requirements.txt
-
-# Copy the entire project into the container
-COPY . /app/
-
-# Expose the port Django will run on
-EXPOSE 8000
-
-# Run Django's development server
+# Run the Django server when the container starts  
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
