@@ -272,7 +272,8 @@ class PlanningListAgent(mixins.ListModelMixin,
     queryset =  Planning.objects.prefetch_related("lignes").all()
     serializer_class = PlanningSerializerForClient
     pagination_class= CustomPageNumberPagination
-
+    filter_backends = (django_filters.rest_framework.DjangoFilterBackend,filters.SearchFilter)
+    filterset_class = PlanningListFilter
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
     
