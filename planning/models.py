@@ -1,6 +1,10 @@
 from django.db import models
 from authentication.models import CustomUser
 from users.models import Clients,AgentProfile
+from django.db.models.signals import pre_save
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 # Create your models here.
 
 import datetime
@@ -35,6 +39,8 @@ class Ligne(models.Model):
     
     start_date = models.DateField()
     end_date = models.DateField()
+    days_needs = models.CharField(max_length=255,null=True, blank=True)
+
     
     agent_type = models.CharField(max_length=100, choices=AGENT_TYPES)
     week_days = models.CharField(max_length=20)  # Store as a comma-separated string or JSON
@@ -54,6 +60,17 @@ class Ligne(models.Model):
         return f"Ligne {self.id} ({self.agent_type})"
 
 
+@receiver(post_save, sender=Ligne)
+def set_days_needs(sender, instance,created, **kwargs):
+    if created:
+        days_needs= list(instance.month_days)
+        days_needs = [str(instance.agent_number) if x=="y" else "0" for x in days_needs]
+        instance.days_needs= ",".join(days_needs)
+        print(instance.days_needs)
+        instance.save()
+        
+
+  
 
 
 class Conditions(models.Model):
@@ -71,7 +88,7 @@ class Conditions(models.Model):
     languages = models.CharField(max_length=255)
     experience = models.JSONField(null=True, blank=True)
     def __str__(self):
-        return f"Conditions {self.id} ({self.agent_type})"
+        return f"Conditions {self.id}"
 
 
 
@@ -86,7 +103,7 @@ class Planning(models.Model):
     ]
     total_hours = models.IntegerField(default=0)
     client = models.ForeignKey(Clients, on_delete=models.CASCADE, related_name='client')
-    site_name = models.CharField(max_length=255)
+    site_name = models.CharField(max_length=255,null=True, blank=True)
     state = models.CharField(max_length=20, choices=STATE_CHOICES, default='draft') 
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
@@ -95,6 +112,8 @@ class Planning(models.Model):
 
     def __str__(self):
         return f"Planning {self.id} ({self.site_name})"
+
+
 
 
 class PlanningAgent(models.Model):

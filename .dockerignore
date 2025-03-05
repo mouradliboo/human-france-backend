@@ -1,2 +1,16 @@
 #docker will ignore this files when building the image
+# Ignore environment files
+.env
+*.pyc
+__pycache__/
+
+# Ignore node_modules and virtual environments
+node_modules/
+venv/
+.virtualenv/
 pdfs/
+
+# Ignore Docker-related files
+Dockerfile
+docker-compose.yaml
+.dockerignore

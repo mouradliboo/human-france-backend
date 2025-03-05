@@ -299,9 +299,50 @@ class PositionnementDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = PlanningAgent.objects.all()
     serializer_class = PositionnementSerializer
     
-    
+@api_view(['POST'])   
+   
+def supprimerVacation(request):
+    position = request.data['position_id'] 
+    ligne_id = request.data["ligne_id"]
+    day = request.data["day"]
+    try:
+        ligne = Ligne.objects.get(id=ligne_id)
+        days_needs = ligne.days_needs.split(",")
+        days_needs[day-1]= str(int(days_needs[day-1])- 1)
+        ligne.days_needs = ",".join( days_needs)
+        agent_position = PlanningAgent.objects.get(id=position)
+        print(agent_position.position[int(day)-1])
+        agent_position.position[int(day)-1]["works"] = False
+        agent_position.position[int(day)-1]["startHour"] = None
+        agent_position.position[int(day)-1]["endHour"] = None
+        agent_position.position[int(day)-1]["id"] = None
+        agent_position.position[int(day)-1]["id2"] = None
+        ligne.save()
+        agent_position.save()
+        
+        
+        return Response({"message":"done successfully"},status=status.HTTP_200_OK)
+    except Ligne.DoesNotExist:
+        return Response({"error": "Ligne not found"}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
         
+@api_view(['GET'])
+def test(request):
+    lignes = Ligne.objects.all()
+    for instance in lignes:
+        
+
+        days_needs= list(instance.month_days)
+        days_needs = [str(instance.agent_number) if x=="y" else "0" for x in days_needs]
+        instance.days_needs= ",".join(days_needs)
+        print(instance.days_needs)
+        instance.save()
+
+
+    
+    return Response({"message":"done"},status=status.HTTP_200_OK)
     
     
     
