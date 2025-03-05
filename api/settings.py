@@ -95,9 +95,9 @@ WSGI_APPLICATION = 'api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mediumclone_humanfrance',
-        'USER': '367579_abdallah',
-        'PASSWORD': 'abdallah',
+        'NAME': "mediumclone_humanfrance",
+        'USER': "367579_abdallah",
+        'PASSWORD':"abdallah",
         'HOST': 'mysql-mediumclone.alwaysdata.net',  # Or your MySQL server's IP/hostname
         'PORT': '3306',  # Default MySQL port
          'OPTIONS': {

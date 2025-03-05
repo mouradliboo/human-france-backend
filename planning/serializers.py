@@ -25,7 +25,7 @@ class LignesSerializerForPlanning(serializers.ModelSerializer):
     
     class Meta:
         model = Ligne
-        fields = ["id","agent_type","start_date","end_date","week_days","month_days","selected_days","pause","agent_number","start_hour","end_hour","isPausePaid","start_cutoff","end_cutoff"]
+        fields = ["id","agent_type","start_date","end_date","week_days","month_days","selected_days","pause","agent_number","start_hour","end_hour","isPausePaid","start_cutoff","end_cutoff","days_needs"]
     
 class ConditionsSerializer(serializers.ModelSerializer):
     

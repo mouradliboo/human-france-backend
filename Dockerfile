@@ -4,11 +4,14 @@ FROM python:latest
 # Set the working directory inside the container  
 
 WORKDIR  /app
+# layer caching 
+# Install dependencies in one RUN command to optimize layers  
+COPY  requirements.txt . 
+RUN pip install --no-cache-dir -r requirements.txt
 # Copy source code into the container  
 COPY . .
 
-# Install dependencies in one RUN command to optimize layers  
-RUN pip install --no-cache-dir -r requirements.txt  
+  
 
 # Expose port 8000  
 EXPOSE 8000  
