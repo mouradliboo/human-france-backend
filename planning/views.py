@@ -15,6 +15,8 @@ from .filters import PlanningListFilter,PositionnementFilter
 from users.models import Clients
 import json
 from rest_framework.decorators import api_view
+from django.db import IntegrityError, transaction
+
 
 
 from .utils import calculate_all_hours,calculate_volume_horaire
@@ -298,9 +300,12 @@ class PositionnementList(generics.ListCreateAPIView):
 class PositionnementDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = PlanningAgent.objects.all()
     serializer_class = PositionnementSerializer
-    
-@api_view(['POST'])   
    
+   
+
+
+@transaction.atomic 
+@api_view(['POST'])   
 def supprimerVacation(request):
     position = request.data['position_id'] 
     ligne_id = request.data["ligne_id"]

@@ -60,14 +60,14 @@ class Ligne(models.Model):
         return f"Ligne {self.id} ({self.agent_type})"
 
 
-@receiver(post_save, sender=Ligne)
-def set_days_needs(sender, instance,created, **kwargs):
-    if created:
+@receiver(pre_save, sender=Ligne)
+def set_days_needs(sender, instance, **kwargs):
+    if instance.days_needs is None:
         days_needs= list(instance.month_days)
         days_needs = [str(instance.agent_number) if x=="y" else "0" for x in days_needs]
         instance.days_needs= ",".join(days_needs)
         print(instance.days_needs)
-        instance.save()
+        
         
 
   
