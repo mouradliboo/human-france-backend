@@ -1,6 +1,6 @@
 version: '3'
 services:
-  human_france:
+  name:
     build: .
     container_name: human_france_c
     ports:
