@@ -5,8 +5,7 @@ services:
     container_name: human_france_c
     ports:
       - "5000:8000"
-    env_file:
-      - .env
+
    
     
     
