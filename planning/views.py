@@ -269,6 +269,7 @@ def conditionsOfPlanning(request, pk):
 
 
     
+
 class PlanningListAgent(mixins.ListModelMixin,
                   generics.GenericAPIView):
     queryset =  Planning.objects.prefetch_related("lignes").all()
