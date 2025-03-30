@@ -1,6 +1,6 @@
 from datetime import datetime
 from .models import Ligne,Planning
-from .serializers import LigneSerializer
+from .serializers.serializers import LigneSerializer
 def calculate_all_hours(ligne):
     def parse_time(time_str):
         """Convert time string to datetime.time object"""
@@ -46,15 +46,15 @@ def calculate_all_hours(ligne):
 def calculate_volume_horaire(planning):
  lignes = Ligne.objects.filter(planning=planning)
  lignes = LigneSerializer(lignes, many=True).data
- min_start_hour = None
+ min_start_date = None
  for ligne in lignes:
-    ligne_start_hour = ligne["start_date"]
-    if min_start_hour is None or ligne_start_hour < min_start_hour:
-        min_start_hour = ligne_start_hour
+    ligne_start_date = ligne["start_date"]
+    if min_start_date is None or ligne_start_date < min_start_date:
+        min_start_date = ligne_start_date
      
 
- print(min_start_hour)
+ print(min_start_date)
  return  {"volume_horaire": sum(  calculate_all_hours(ligne)*ligne["agent_number"] for ligne in lignes),
-          "start_hour": min_start_hour
+          "start_date": min_start_date
  }
  

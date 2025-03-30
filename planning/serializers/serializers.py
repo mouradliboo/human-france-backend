@@ -1,4 +1,4 @@
-from .models import Planning, Ligne, Conditions,PlanningAgent
+from ..models import Planning, Ligne, Conditions,PlanningAgent
 from users.models import Clients
 from rest_framework import serializers
 from users.serializers import AgentDetailSerializer
@@ -21,12 +21,7 @@ class LigneSerializer(serializers.ModelSerializer):
         model = Ligne
         fields = '__all__'
         
-class LignesSerializerForPlanning(serializers.ModelSerializer):
-    
-    class Meta:
-        model = Ligne
-        fields = ["id","agent_type","start_date","end_date","week_days","month_days","selected_days","pause","agent_number","start_hour","end_hour","isPausePaid","start_cutoff","end_cutoff","days_needs"]
-    
+
 class ConditionsSerializer(serializers.ModelSerializer):
     
     class Meta:
@@ -54,3 +49,9 @@ class PlanningSerializerForAgent(serializers.ModelSerializer):
         model = Planning
         fields = '__all__'
  
+class PlanningDetailsSerializer(serializers.ModelSerializer):
+    lignes = LigneSerializer(many=True)
+    class Meta:
+        model = Planning
+        exclude=["conditions"]
+        

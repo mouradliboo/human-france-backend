@@ -1,17 +1,26 @@
 from django.db import connection
 from django.shortcuts import render
 from rest_framework import generics
-from .models import Planning, Ligne, Conditions,PlanningAgent
-from .serializers import PlanningSerializer,LigneSerializer,PositionnementSerializer,PositionnementPostSerializer,PlanningSerializerForClient,PlanningSerializerForAgent,LignesSerializerForPlanning,ConditionsSerializer
-from django.db import DatabaseError, transaction,IntegrityError
+from ..models import Planning, Ligne, Conditions,PlanningAgent
+from ..serializers.serializers import (PlanningSerializer,LigneSerializer,
+                                       PositionnementSerializer,
+                                       PositionnementPostSerializer,
+                                       PlanningSerializerForClient,
+                                       PlanningSerializerForAgent,
+                                       PlanningDetailsSerializer,
+                                       ConditionsSerializer)
+
+from django.db import (DatabaseError,
+                       transaction,
+                       IntegrityError)
 from rest_framework.response import Response
 from rest_framework import status,mixins
 from users.pagination import CustomPageNumberPagination
 from django.shortcuts import get_object_or_404
-from .models import Planning, Ligne
+from ..models import Planning, Ligne
 from rest_framework import filters
 import django_filters
-from .filters import PlanningListFilter,PositionnementFilter
+from ..filters import PlanningListFilter,PositionnementFilter
 from users.models import Clients
 import json
 from rest_framework.decorators import api_view
@@ -19,7 +28,7 @@ from django.db import IntegrityError, transaction
 
 
 
-from .utils import calculate_all_hours,calculate_volume_horaire
+from ..utils import calculate_all_hours,calculate_volume_horaire
 # Create your views he
 
 
@@ -51,6 +60,7 @@ class LigneList(generics.ListCreateAPIView):
         planning = Planning.objects.get(id=data.planning)
         volume_horaire = calculate_volume_horaire(planning)
         planning.total_hours = volume_horaire["volume_horaire"]
+        planning.start_planning_date = volume_horaire["start_date"]
         planning.save()
         return Response(LigneSerializer(ligne).data, status=status_code)
       except IntegrityError as e:
@@ -72,6 +82,7 @@ class LigneDetail(generics.RetrieveUpdateDestroyAPIView):
         instance.delete()          # ✅ Default behavior (delete)
         volume_horaire = calculate_volume_horaire(planning)
         planning.total_hours = volume_horaire["volume_horaire"]
+        planning.start_planning_date = volume_horaire["start_date"]
         planning.save()
 class PlanningList(generics.ListCreateAPIView):
     queryset = Planning.objects.all()
@@ -94,10 +105,8 @@ class PlanningList(generics.ListCreateAPIView):
                     hours =0
                     min_date = None
                     for ligne in request.data['lignes']:
-                        print(Planning_serializer.validated_data)
                         ligne['planning'] = Planning.id
                         ligne_serializer = LigneSerializer(data=ligne)
-                        print(ligne)
                         if ligne_serializer.is_valid():
                             ligne_serializer.save()
                             if min_date is None or min_date > ligne['start_date']:
@@ -108,10 +117,10 @@ class PlanningList(generics.ListCreateAPIView):
                         else:
                             transaction.savepoint_rollback(sid) 
                             return Response(ligne_serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-                    print(hours)
                     Planning_serializer.validated_data['total_hours'] = hours  # Update the field
                     Planning_serializer.validated_data['start_planning_date'] = min_date  # Update the field
-                    Planning_serializer.save(total_hours=hours)  # Pass the field while saving
+                    Planning_serializer.save(total_hours=hours,
+                                             start_planning_date=min_date)  # Pass the field while saving
                     transaction.savepoint_commit(sid)
                     return Response(Planning_serializer.data,status=status.HTTP_201_CREATED)
                 else : 
@@ -132,22 +141,8 @@ class PlanningList(generics.ListCreateAPIView):
         
 class PlanningDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Planning.objects.all()
-    serializer_class = PlanningSerializer
-    def get(self,request,*args,**kwargs):
-        planning = get_object_or_404(Planning, pk=kwargs.get("pk"))  # Returns 404 if not found
-        lignes = Ligne.objects.filter(planning=planning)
-        
-        planning_serializer = PlanningSerializer(planning)
-        lignes_serializer = LignesSerializerForPlanning(lignes, many=True)
-
-        data = {
-        "planning": {
-            **planning_serializer.data,
-            "lignes": lignes_serializer.data
-        }
-    }
-
-        return Response(data)
+    serializer_class = PlanningDetailsSerializer
+  
     def patch(self, request, *args, **kwargs):
      try:
         planning = get_object_or_404(Planning, pk=kwargs.get("pk"))
@@ -156,20 +151,20 @@ class PlanningDetail(generics.RetrieveUpdateDestroyAPIView):
         shouldUpdateTime = False
         if request.data.get("lignes"):
             shouldUpdateTime = True
-            for ligne in request.data["lignes"]:
-                ligne_id = ligne.get("id")
-                if ligne_id:
-                    try:
-                        ligne_to_update = Ligne.objects.get(id=ligne_id)  # ✅ FIXED: Use `.get()`
+            lignes = request.data.get("lignes",[])
+            for ligne in lignes:
+                ligne_id = ligne.get("id",None)
+                if ligne_id:   #if updating existing ligne
+                   
+                        ligne_to_update = get_object_or_404(Ligne, pk=ligne_id)  
                         ligne_serializer = LigneSerializer(ligne_to_update, data=ligne, partial=True)
                         if ligne_serializer.is_valid():
                             ligne_serializer.save()
                         else:
                             return Response(ligne_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-                    except Ligne.DoesNotExist:
-                        return Response({"error": "Ligne not found"}, status=status.HTTP_404_NOT_FOUND)
-                else:
-                    ligne_serializer = LigneSerializer(data=ligne)
+              
+                else:# creating new ligne
+                    ligne_serializer = LigneSerializer(data=ligne) 
                     if ligne_serializer.is_valid():
                         ligne_serializer.save()
                     else:
@@ -184,12 +179,11 @@ class PlanningDetail(generics.RetrieveUpdateDestroyAPIView):
 
         if shouldUpdateTime:
             volume_horaire = calculate_volume_horaire(planning)
-            print(volume_horaire)
             planning.total_hours = volume_horaire["volume_horaire"]
-            planning.start_planning_date = volume_horaire["start_hour"]
+            planning.start_planning_date = volume_horaire["start_date"]
 
-        transaction.savepoint_commit(sid)
         planning.save()
+        transaction.savepoint_commit(sid)
         return Response(PlanningSerializer(planning).data)
 
      except IntegrityError as e:
@@ -210,9 +204,9 @@ class PlanningDetail(generics.RetrieveUpdateDestroyAPIView):
 class ConditionsList(generics.ListCreateAPIView):
     queryset = Conditions.objects.all()
     serializer_class = ConditionsSerializer
+    
     def post(self,request, *args, **kwargs):
      try:
-         print(request.data)  # Debugging
 
         # Make a mutable copy of request.data
 
@@ -226,7 +220,10 @@ class ConditionsList(generics.ListCreateAPIView):
             conditions = conditions_serializer.save()
 
             # Retrieve planning object using the correct key
-            planning = Planning.objects.get(id=request.data["planning"])
+            planning_id = request.data.get("planning", None)
+            if planning_id is None:
+                return Response({"error": "Planning ID is required"}, status=status.HTTP_400_BAD_REQUEST)
+            planning = get_object_or_404(Planning, pk=planning_id)
 
             # Link the new conditions to the planning instance
             planning.conditions = conditions
@@ -270,8 +267,7 @@ def conditionsOfPlanning(request, pk):
 
     
 
-class PlanningListAgent(mixins.ListModelMixin,
-                  generics.GenericAPIView):
+class PlanningListAgent(generics.ListAPIView):
     queryset =  Planning.objects.prefetch_related("lignes").all()
     serializer_class = PlanningSerializerForClient
     pagination_class= CustomPageNumberPagination
@@ -280,12 +276,7 @@ class PlanningListAgent(mixins.ListModelMixin,
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
     
-    
-class PlanningAgentList(generics.ListCreateAPIView):
-    queryset = Planning.objects.all()
-    serializer_class = PlanningSerializerForAgent()
-    pagination_class= CustomPageNumberPagination
-    
+
 class PositionnementList(generics.ListCreateAPIView):
     queryset = PlanningAgent.objects.all()
     pagination_class= CustomPageNumberPagination
@@ -308,16 +299,15 @@ class PositionnementDetail(generics.RetrieveUpdateDestroyAPIView):
 @transaction.atomic 
 @api_view(['POST'])   
 def supprimerVacation(request):
-    position = request.data['position_id'] 
-    ligne_id = request.data["ligne_id"]
-    day = request.data["day"]
+    position = request.data.get('position_id') 
+    ligne_id = request.data.get("ligne_id")
+    day = request.data.get("day")
     try:
-        ligne = Ligne.objects.get(id=ligne_id)
+        ligne = get_object_or_404(Ligne, id=ligne_id)
         days_needs = ligne.days_needs.split(",")
-        days_needs[day-1]= str(int(days_needs[day-1])- 1)
+        days_needs[int(day)-1]= str(int(days_needs[day-1])- 1)
         ligne.days_needs = ",".join( days_needs)
-        agent_position = PlanningAgent.objects.get(id=position)
-        print(agent_position.position[int(day)-1])
+        agent_position = get_object_or_404(PlanningAgent, id=position)
         agent_position.position[int(day)-1]["works"] = False
         agent_position.position[int(day)-1]["startHour"] = None
         agent_position.position[int(day)-1]["endHour"] = None

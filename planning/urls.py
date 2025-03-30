@@ -1,5 +1,16 @@
 from django.urls import path,include
-from .views import PlanningList, PlanningDetail, PlanningListAgent,PositionnementList,supprimerVacation,test,PositionnementDetail,LigneList, conditionsOfPlanning,LigneDetail, ConditionsList, ConditionsDetail
+from .views.views import(
+   PlanningList, 
+   PlanningDetail, 
+   PlanningListAgent,
+   PositionnementList,
+    supprimerVacation,
+    test,
+    PositionnementDetail,
+    LigneList, conditionsOfPlanning,
+    LigneDetail,
+    ConditionsList, ConditionsDetail)
+
 urlpatterns = [
   path('planning/', PlanningList.as_view(), name='planning-list'),
    path('planning/<int:pk>/', PlanningDetail.as_view(), name='planning-detail'),
