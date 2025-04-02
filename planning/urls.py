@@ -4,12 +4,15 @@ from .views.views import(
    PlanningDetail, 
    PlanningListAgent,
    PositionnementList,
+   PositionnmentAgentFilterList,
+   
     supprimerVacation,
     test,
     PositionnementDetail,
     LigneList, conditionsOfPlanning,
     LigneDetail,
     ConditionsList, ConditionsDetail)
+from .views.hr_views import (AbsencesList,)
 
 urlpatterns = [
   path('planning/', PlanningList.as_view(), name='planning-list'),
@@ -23,6 +26,10 @@ urlpatterns = [
     path('planning/agents/',PlanningListAgent.as_view(),name='planning-list-agent') ,
     path('planning/position/',PositionnementList.as_view(),name='planning-list-agent'),
     path('planning/position/<int:pk>/',PositionnementDetail.as_view(),name='planning-list-agent'),
+    path('planning/positionAgent/',PositionnmentAgentFilterList.as_view(),name='planning-list-agent'),
+    path('planning/absences/',AbsencesList.as_view(),name='absences-list'),
+    
+    
     path('test/',test),
    
    ]

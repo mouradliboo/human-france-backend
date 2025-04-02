@@ -6,9 +6,9 @@ from ..serializers.serializers import (PlanningSerializer,LigneSerializer,
                                        PositionnementSerializer,
                                        PositionnementPostSerializer,
                                        PlanningSerializerForClient,
-                                       PlanningSerializerForAgent,
                                        PlanningDetailsSerializer,
-                                       ConditionsSerializer)
+                                       ConditionsSerializer,
+                                       PositionnementFilterSerializer)
 
 from django.db import (DatabaseError,
                        transaction,
@@ -293,7 +293,11 @@ class PositionnementDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = PlanningAgent.objects.all()
     serializer_class = PositionnementSerializer
    
-   
+class PositionnmentAgentFilterList(generics.ListAPIView):
+    queryset = PlanningAgent.objects.filter(status="accepted").all()
+    serializer_class = PositionnementFilterSerializer
+    filter_backends = (django_filters.rest_framework.DjangoFilterBackend,filters.SearchFilter)
+    filterset_class = PositionnementFilter
 
 
 @transaction.atomic 
@@ -308,7 +312,7 @@ def supprimerVacation(request):
         days_needs[int(day)-1]= str(int(days_needs[day-1])- 1)
         ligne.days_needs = ",".join( days_needs)
         agent_position = get_object_or_404(PlanningAgent, id=position)
-        agent_position.position[int(day)-1]["works"] = False
+        agent_position.position[int(day)-1]["status"] = "free"
         agent_position.position[int(day)-1]["startHour"] = None
         agent_position.position[int(day)-1]["endHour"] = None
         agent_position.position[int(day)-1]["id"] = None

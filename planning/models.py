@@ -143,4 +143,15 @@ class PlanningAgent(models.Model):
         
         
 
-    
+
+class Absences(models.Model):
+    planning_agent = models.ForeignKey(PlanningAgent, on_delete=models.CASCADE, related_name='planning_agent')
+    absence_date = models.DateField()
+    motiv = models.CharField(max_length=255)
+    absence_type = models.CharField(max_length=255)
+    is_justified = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+
+    def __str__(self):
+        return f"Absence {self.id} ({self.planning_agent})"
