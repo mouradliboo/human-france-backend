@@ -53,7 +53,7 @@ class AbsencesList(generics.ListCreateAPIView):
                     absence_serializer.save()
                     # Update the planning agent's position  to 'absent'
                     planning_agent_instance = get_object_or_404(PlanningAgent, id=planning_agent)
-                    if planning_agent_instance.position[int(day)-1]['works'] != True:
+                    if planning_agent_instance.position[int(day)-1]['status'] != "work":
                             raise AgentNotWorkingException("Agent is not working on this day.")
                     planning_agent_instance.position[int(day)-1]["status"] = 'absent'
                     print(planning_agent_instance.position[int(day)-1])
@@ -89,6 +89,53 @@ class AbsencesList(generics.ListCreateAPIView):
 class AbsencesDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Absences.objects.all()
     serializer_class = AbsencesSerializer
+    allowed_methods = ['GET', 'PATCH', 'DELETE']
+    
+    @transaction.atomic
+    def patch(self, request, *args, **kwargs):
+      absence = Absences.objects.filter(id=kwargs['pk']).select_related('planning_agent').first()
+    
+      if not absence:
+        return Response({"error": "Absence not found."}, status=404)
+
+      try:
+        if request.data.get("motiv"):
+            absence.motiv = request.data["motiv"]
+
+        if request.data.get("is_justified") is not None:
+            absence.is_justified = request.data["is_justified"]
+
+        if request.data.get("absence_type"):
+            absence.absence_type = request.data["absence_type"]
+
+        if request.data.get("absence_date"):
+          with transaction.atomic():
+            a = request.data["absence_date"]
+            absence_date = datetime.strptime(a, "%Y-%m-%d").replace(tzinfo=pytz.UTC)
+
+            planning_agent = absence.planning_agent
+
+            if planning_agent.position:
+                day_absent_to_remove = absence.absence_date.day
+                day_absent_adjust = absence_date.day
+
+                try:
+                    planning_agent.position[day_absent_to_remove - 1]["status"] = 'work'
+                    planning_agent.position[day_absent_adjust - 1]["status"] = 'absent'
+                except IndexError:
+                    return Response({"error": "Position data does not cover the given day(s)."}, status=400)
+
+                absence.absence_date = absence_date
+                planning_agent.save()
+            else:
+                return Response({"error": "No position data found for this planning agent."}, status=400)
+
+        absence.save()
+        return Response({"message": "Absence updated successfully."}, status=200)
+
+      except Exception as e:
+        return Response({"error": str(e)}, status=500)
+
     @transaction.atomic
     def delete(self,request,*args,**kargs):
      try:

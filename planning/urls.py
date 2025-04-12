@@ -7,11 +7,12 @@ from .views.views import(
    PositionnmentAgentFilterList,
    
     supprimerVacation,
-    test,
+    
     PositionnementDetail,
     LigneList, conditionsOfPlanning,
     LigneDetail,
-    ConditionsList, ConditionsDetail)
+    ConditionsList, ConditionsDetail,
+)
 from .views.hr_views import (AbsencesList,
                              AbsencesDetail,)
 
@@ -32,6 +33,6 @@ urlpatterns = [
     path('planning/absences/<int:pk>/',AbsencesDetail.as_view(),name='absences-detail'),
     
     
-    path('test/',test),
+    # path('test/',TryList.as_view(),name='test-list'),
    
    ]

@@ -8,7 +8,8 @@ from ..serializers.serializers import (PlanningSerializer,LigneSerializer,
                                        PlanningSerializerForClient,
                                        PlanningDetailsSerializer,
                                        ConditionsSerializer,
-                                       PositionnementFilterSerializer)
+                                       PositionnementFilterSerializer,
+                                       )
 
 from django.db import (DatabaseError,
                        transaction,
@@ -327,22 +328,8 @@ def supprimerVacation(request):
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
-        
-@api_view(['GET'])
-def test(request):
-    lignes = Ligne.objects.all()
-    for instance in lignes:
-        
-
-        days_needs= list(instance.month_days)
-        days_needs = [str(instance.agent_number) if x=="y" else "0" for x in days_needs]
-        instance.days_needs= ",".join(days_needs)
-        print(instance.days_needs)
-        instance.save()
-
-
     
-    return Response({"message":"done"},status=status.HTTP_200_OK)
+
     
     
     

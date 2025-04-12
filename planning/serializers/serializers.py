@@ -4,6 +4,7 @@ from rest_framework import serializers
 from users.serializers import AgentDetailSerializer,AgentListInscriptionSerializer
 
 
+
 class PositionnementPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlanningAgent

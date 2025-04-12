@@ -149,9 +149,10 @@ class Absences(models.Model):
     absence_date = models.DateField()
     motiv = models.CharField(max_length=255)
     absence_type = models.CharField(max_length=255)
-    is_justified = models.BooleanField(default=False)
+    is_justified = models.CharField(max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f"Absence {self.id} ({self.planning_agent})"
+    
